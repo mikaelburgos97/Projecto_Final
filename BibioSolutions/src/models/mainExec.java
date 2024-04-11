@@ -11,6 +11,8 @@ public class mainExec {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        LoginDAO ins = new LoginDAO();
+        System.out.println( ins.realizarLogin("test_user", "12345"));
     }
     
     
