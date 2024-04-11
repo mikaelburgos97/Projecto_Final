@@ -3,7 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/TI/Documents/NetBeansProjects/BibioSolutions/src/bibiosolutions/BibioSolutions.java</file>
+            <file>file:/C:/Users/TI/Desktop/asdasd/Projecto_Final/BibioSolutions/src/models/LoginDTO.java</file>
+            <file>file:/C:/Users/TI/Desktop/asdasd/Projecto_Final/BibioSolutions/src/models/LibroDTO.java</file>
+            <file>file:/C:/Users/TI/Desktop/asdasd/Projecto_Final/BibioSolutions/src/models/mainExec.java</file>
+            <file>file:/C:/Users/TI/Desktop/asdasd/Projecto_Final/BibioSolutions/src/models/LibroDAO.java</file>
+            <file>file:/C:/Users/TI/Desktop/asdasd/Projecto_Final/BibioSolutions/src/models/utils/DateHandler.java</file>
+            <file>file:/C:/Users/TI/Desktop/asdasd/Projecto_Final/BibioSolutions/src/models/LoginDAO.java</file>
         </group>
     </open-files>
 </project-private>

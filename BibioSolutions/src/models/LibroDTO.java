@@ -14,10 +14,30 @@ public class LibroDTO {
     int id;
     double daily_price;
     double buyed_price;
-    int total_stock = 0;
+    String title;
+    String autorName;
+       int total_stock = 0;
     String desc_ubicacion;
     double mora_aument;
     double total_ganancies;
+        LocalDate created_at;
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getAutorName() {
+        return autorName;
+    }
+
+    public void setAutorName(String autorName) {
+        this.autorName = autorName;
+    }
+ 
 
     public String getDesc_ubicacion() {
         return desc_ubicacion;
@@ -35,14 +55,14 @@ public class LibroDTO {
     public void setTotal_ganancies(double total_ganancies) {
         this.total_ganancies = total_ganancies;
     }
-    LocalDate created_at;
 
-    public LocalDate getCreated_at() {
-        return created_at;
+
+    public String getCreated_at() {
+        return DateHandler.parseDateToString(created_at);
     }
 
-    public void setCreated_at(LocalDate created_at) {
-        this.created_at = created_at;
+    public void setCreated_at(String created_at) {
+        this.created_at = DateHandler.parseStringToDate(created_at);
     }
     
     public int getId() {
@@ -91,7 +111,7 @@ public class LibroDTO {
     }
     
     public String tiempoRegistrado() {
-        return DateHandler.differenceInDays(this.getCreated_at());
+        return DateHandler.differenceInDays(DateHandler.parseStringToDate(this.getCreated_at()));
     }
     
     
