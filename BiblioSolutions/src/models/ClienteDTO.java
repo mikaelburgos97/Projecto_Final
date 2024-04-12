@@ -9,12 +9,23 @@ package models;
  * @author Alan Alexander Perez
  */
 public class ClienteDTO {
+
+    int Id;
+
     String cedula;
     String nombreCompleto;
     String calle;
     String telefono;
     String correo;
     boolean hasPendingOrders;
+
+    public int getId() {
+        return Id;
+    }
+
+    public void setId(int Id) {
+        this.Id = Id;
+    }
 
     public boolean isHasPendingOrders() {
         return hasPendingOrders;
@@ -23,7 +34,6 @@ public class ClienteDTO {
     public void setHasPendingOrders(boolean hasPendingOrders) {
         this.hasPendingOrders = hasPendingOrders;
     }
-    
 
     public String getCedula() {
         return cedula;
@@ -64,9 +74,5 @@ public class ClienteDTO {
     public void setCorreo(String correo) {
         this.correo = correo;
     }
-    
-    
-    
 
-    
 }

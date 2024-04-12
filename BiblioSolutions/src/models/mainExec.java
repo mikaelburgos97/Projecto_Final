@@ -26,11 +26,9 @@ public class mainExec {
         // en el tipo List<LibroDTO> 
         System.out.println(insLib.listar());
 
-        
-        
-        
-        
-        
+        /////////////////////
+        /////// LIBROS ///////
+        /////////////////////
         // Agregar un libro a la BD, descomentenlo o copienlo cuando quieran usarlo.
         /*
         LibroDTO libro = new LibroDTO();
@@ -50,11 +48,6 @@ public class mainExec {
         } else {
             System.out.println("Error");
         }*/
-        
-        
-        
-        
-        
         // Actualizar datos en la BD, para que funcione sin errores el id 2 debe existir (validenlo con DB Browse),
         //descomentenlo o copienlo cuando quieran usarlo.
         /*
@@ -77,11 +70,6 @@ public class mainExec {
             System.out.println("Error");
         }
          */
-        
-        
-        
-        
-        
         // Eliminar datos de la BD, para que funcione sin errores el id 2 debe existir (validenlo con DB Browse)
         // descomentenlo o copienlo cuando quieran usarlo.
         /*
@@ -91,6 +79,69 @@ public class mainExec {
             System.out.println("Libro Borrado ");
         } else {
             System.out.println("Error");
+        }
+         */
+        /////////////////////
+        /////// CLIENTES ///////
+        /////////////////////
+        //Listar datos de la DB
+        ClienteDAO insClientes = new ClienteDAO();
+        System.out.println(insClientes.listar());
+
+        // Agregar datos a la DB
+        // Descomenten o copien para usarlo
+        /*
+        ClienteDTO cliente = new ClienteDTO();
+        cliente.setCedula("123456789");
+        cliente.setNombreCompleto("Juan Pérez");
+        cliente.setCalle("Calle Principal 123");
+        cliente.setTelefono("555-1234");
+        cliente.setCorreo("juan@example.com");
+
+        ClienteDAO clienteDAO = new ClienteDAO();
+        int resultado = clienteDAO.agregar(cliente);
+
+        if (resultado == 1) {
+            System.out.println("Cliente insertado correctamente.");
+        } else {
+            System.out.println("Error al insertar el cliente.");
+        }
+         */
+        
+        
+        
+        // Actualizar datos de la BD
+        // Descomenten o copien para usarlo
+        /*
+        ClienteDTO cliente = new ClienteDTO();
+        cliente.setId(2);
+        cliente.setCedula("123456789");
+        cliente.setNombreCompleto("Juan Martin Pérez");
+        cliente.setCalle("Calle Principal 123");
+        cliente.setTelefono("555-1234");
+        cliente.setCorreo("juan@example.com");
+
+        ClienteDAO clienteDAO = new ClienteDAO();
+        int resultado = clienteDAO.actualizar(cliente);
+
+        if (resultado == 1) {
+            System.out.println("Cliente actualizado correctamente.");
+        } else {
+            System.out.println("Error al insertar el cliente.");
+        }
+        
+        
+         */
+        // Eliminar datos de la BD
+        // Descomenten o copien para usarlo
+        /*
+        ClienteDAO clienteDAO = new ClienteDAO();
+        int resultado = clienteDAO.eliminar(2);
+
+        if (resultado == 1) {
+            System.out.println("Cliente borrado correctamente.");
+        } else {
+            System.out.println("Error al borrar el cliente.");
         }
          */
     }
