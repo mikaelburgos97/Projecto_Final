@@ -23,7 +23,14 @@ public class ClienteDAO {
     ResultSet rs;
 
     public List<ClienteDTO> listar() {
-        String sql = "SELECT * FROM Clientes";
+        String sql = "SELECT DISTINCT c.*, \n" +
+                    "    CASE WHEN EXISTS (\n" +
+                    "        SELECT 1 \n" +
+                    "        FROM Reservas r \n" +
+                    "        WHERE r.cliente_id = c.Id \n" +
+                    "        AND r.status = 'Pendiente'\n" +
+                    "    ) THEN TRUE ELSE FALSE END AS tiene_reserva_pendiente\n" +
+                    "FROM Clientes c";
         List<ClienteDTO> datos = new ArrayList<>();
 
         try {
@@ -39,7 +46,9 @@ public class ClienteDAO {
                 cliente.setCalle(rs.getString(4));
                 cliente.setTelefono(rs.getString(5));
                 cliente.setCorreo(rs.getString(6));
-
+                System.out.println(rs.getString(7));
+                cliente.setHasPendingOrders(rs.getBoolean(7));
+                
                 datos.add(cliente);
             }
         } catch (SQLException ex) {

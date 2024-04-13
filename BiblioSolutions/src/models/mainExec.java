@@ -86,7 +86,8 @@ public class mainExec {
         /////////////////////
         //Listar datos de la DB
         ClienteDAO insClientes = new ClienteDAO();
-        System.out.println(insClientes.listar());
+        ClienteDTO r = insClientes.listar().get(0);
+        System.out.println(r.getHasPendingOrders());
 
         // Agregar datos a la DB
         // Descomenten o copien para usarlo

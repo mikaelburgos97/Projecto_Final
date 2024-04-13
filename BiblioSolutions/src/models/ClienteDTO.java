@@ -27,7 +27,7 @@ public class ClienteDTO {
         this.Id = Id;
     }
 
-    public boolean isHasPendingOrders() {
+    public boolean getHasPendingOrders() {
         return hasPendingOrders;
     }
 
