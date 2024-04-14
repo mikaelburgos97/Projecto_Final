@@ -5,6 +5,7 @@
 package views;
 
 import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import models.ClienteDAO;
 import models.ClienteDTO;
@@ -15,94 +16,135 @@ import models.ClienteDTO;
  */
 public class ClienteCRUD extends javax.swing.JFrame {
     
-        private ClienteDAO clienteDAO;
+    ClienteDAO clienteDAO = new ClienteDAO();
+    DefaultTableModel modelo = new DefaultTableModel();
 
-    public ClienteCRUD() {
+    /**
+     * Creates new form ClienteCRUD
+     */
+     public ClienteCRUD() {
         initComponents();
-        clienteDAO = new ClienteDAO();
-        loadClienteTable();
+        
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                agregar();
+            }
+        });
+
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                actualizar();
+            }
+        });
+
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                eliminar();
+            }
+        });
+        
+        jTable1.getSelectionModel().addListSelectionListener(event -> {
+            if (!event.getValueIsAdjusting() && jTable1.getSelectedRow() != -1) {
+                int selectedRow = jTable1.getSelectedRow();
+                jTextField1.setText(jTable1.getValueAt(selectedRow, 1).toString()); // Cedula
+                jTextField2.setText(jTable1.getValueAt(selectedRow, 2).toString()); // Nombre Completo
+                jTextField3.setText(jTable1.getValueAt(selectedRow, 3).toString()); // Calle
+                jTextField4.setText(jTable1.getValueAt(selectedRow, 4).toString()); // Telefono
+                jTextField5.setText(jTable1.getValueAt(selectedRow, 5).toString()); // Correo
+            }
+        });
+        
+        listarClientes();
     }
-
-    private void loadClienteTable() {
-        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-        model.setRowCount(0);
-
+     
+     private void listarClientes() {
         List<ClienteDTO> clientes = clienteDAO.listar();
-        for (ClienteDTO cliente : clientes) {
-            Object[] row = {
-                cliente.getCedula(),
-                cliente.getNombreCompleto(),
-                cliente.getCalle(),
-                cliente.getTelefono(),
-                cliente.getCorreo()
-            };
-            model.addRow(row);
+        modelo = (DefaultTableModel) jTable1.getModel();
+        modelo.setRowCount(0); // Limpiar la tabla antes de llenarla
+        Object[] objeto = new Object[6];
+        for (int i = 0; i < clientes.size(); i++) {
+            objeto[0] = clientes.get(i).getId();
+            objeto[1] = clientes.get(i).getCedula();
+            objeto[2] = clientes.get(i).getNombreCompleto();
+            objeto[3] = clientes.get(i).getCalle();
+            objeto[4] = clientes.get(i).getTelefono();
+            objeto[5] = clientes.get(i).getCorreo();
+            modelo.addRow(objeto);
         }
+        jTable1.setModel(modelo);
     }
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
-        String cedula = jTextField1.getText();
-        String nombre = jTextField2.getText();
-        String calle = jTextField4.getText();
-        String telefono = jTextField5.getText();
-        String correo = jTextField6.getText();
-
+     
+      private void agregar() {
         ClienteDTO cliente = new ClienteDTO();
+
+        // Obtener los valores de los campos de texto
+        String cedula = jTextField1.getText();
+        String nombreCompleto = jTextField2.getText();
+        String calle = jTextField3.getText();
+        String telefono = jTextField4.getText();
+        String correo = jTextField5.getText();
+
+        // Asignar los valores a la instancia de ClienteDTO
         cliente.setCedula(cedula);
-        cliente.setNombreCompleto(nombre);
+        cliente.setNombreCompleto(nombreCompleto);
         cliente.setCalle(calle);
         cliente.setTelefono(telefono);
         cliente.setCorreo(correo);
 
-        clienteDAO.agregar(cliente);
-        clearFields();
-        loadClienteTable();
+        int resultado = clienteDAO.agregar(cliente);
+        if (resultado == 1) {
+            listarClientes();
+            // Limpiar los campos de texto después de agregar un cliente
+            jTextField1.setText("");
+            jTextField2.setText("");
+            jTextField3.setText("");
+            jTextField4.setText("");
+            jTextField5.setText("");
+        }
     }
-
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {
-        int selectedRow = jTable1.getSelectedRow();
-        if (selectedRow != -1) {
-            int id = (int) jTable1.getValueAt(selectedRow, 0);
-            String cedula = jTextField1.getText();
-            String nombre = jTextField2.getText();
-            String calle = jTextField4.getText();
-            String telefono = jTextField5.getText();
-            String correo = jTextField6.getText();
-
+      
+       private void actualizar() {
+        int fila = jTable1.getSelectedRow();
+        if (fila != -1) {
             ClienteDTO cliente = new ClienteDTO();
-            cliente.setId(id);
-            cliente.setCedula(cedula);
-            cliente.setNombreCompleto(nombre);
-            cliente.setCalle(calle);
-            cliente.setTelefono(telefono);
-            cliente.setCorreo(correo);
 
-            clienteDAO.actualizar(cliente);
-            clearFields();
-            loadClienteTable();
+            // Obtener los valores de los campos de texto
+            cliente.setCedula(jTextField1.getText());
+            cliente.setNombreCompleto(jTextField2.getText());
+            cliente.setCalle(jTextField3.getText());
+            cliente.setTelefono(jTextField4.getText());
+            cliente.setCorreo(jTextField5.getText());
+
+            // Obtiene el ID desde la tabla (asumiendo que el ID está en la columna 0)
+            cliente.setId((int) jTable1.getValueAt(fila, 0));
+
+            int resultado = clienteDAO.actualizar(cliente);
+            if (resultado == 1) {
+                listarClientes(); // Refresca la lista en la tabla
+                JOptionPane.showMessageDialog(null, "Cliente actualizado correctamente.");
+            } else {
+                JOptionPane.showMessageDialog(null, "Error al actualizar el cliente.");
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Seleccione una fila para actualizar.");
+        }
+        jTextField1.setText("");
+        jTextField2.setText("");
+        jTextField3.setText("");
+        jTextField4.setText("");
+        jTextField5.setText("");
+    }
+       private void eliminar() {
+        int fila = jTable1.getSelectedRow();
+        if (fila >= 0) {
+            int id = (int) modelo.getValueAt(fila, 0);
+            int resultado = clienteDAO.eliminar(id);
+            if (resultado == 1) {
+                listarClientes();
+            }
         }
     }
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {
-        int selectedRow = jTable1.getSelectedRow();
-        if (selectedRow != -1) {
-            int id = (int) jTable1.getValueAt(selectedRow, 0);
-            clienteDAO.eliminar(id);
-            loadClienteTable();
-        }
-    }
-
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {
-        loadClienteTable();
-    }
-
-private void clearFields() {
-    jTextField1.setText("");
-    jTextField2.setText("");
-    jTextField4.setText("");
-    jTextField5.setText("");
-    jTextField6.setText("");
-}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -114,33 +156,45 @@ private void clearFields() {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
         jTextField2 = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        jTextField3 = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
         jTextField4 = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
         jTextField5 = new javax.swing.JTextField();
-        jTextField6 = new javax.swing.JTextField();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setText("Cedula");
 
-        jLabel2.setText("Nombre");
+        jLabel2.setText("Nombre Completo");
 
-        jLabel4.setText("Calle");
+        jLabel3.setText("Calle");
 
-        jLabel5.setText("Telefono");
+        jLabel4.setText("Telefono");
 
-        jLabel6.setText("Correo");
+        jLabel5.setText("Correo");
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
+            },
+            new String [] {
+                "ID", "Cedula", "Nombre Completo", "Calle", "Telefono", "Correo"
+            }
+        ));
+        jScrollPane1.setViewportView(jTable1);
 
         jButton1.setText("Crear");
 
@@ -148,96 +202,66 @@ private void clearFields() {
 
         jButton3.setText("Borrar");
 
-        jButton4.setText("Ver Lista");
-
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
-            },
-            new String [] {
-                "Cedula", "Nombre", "Calle", "Telefono", "Correo"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, true, true, false, true
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jScrollPane1.setViewportView(jTable1);
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2)
+                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3)
+                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4)
+                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5)
+                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 67, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 787, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(89, 89, 89)
-                                .addComponent(jButton1)
-                                .addGap(63, 63, 63)
-                                .addComponent(jButton2)
-                                .addGap(54, 54, 54)
-                                .addComponent(jButton3)
-                                .addGap(31, 31, 31)
-                                .addComponent(jButton4)))
-                        .addContainerGap(168, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel6)
-                            .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel4)
-                            .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel5)
-                            .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jButton1)
+                        .addGap(252, 252, 252)
+                        .addComponent(jButton2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addComponent(jButton3)
+                        .addGap(75, 75, 75))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel5)
-                        .addGap(18, 18, 18)
-                        .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel6)
-                        .addGap(18, 18, 18)
-                        .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 365, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 363, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 63, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(jButton2)
-                    .addComponent(jButton3)
-                    .addComponent(jButton4))
-                .addGap(40, 40, 40))
+                    .addComponent(jButton3))
+                .addGap(28, 28, 28))
         );
 
         pack();
@@ -282,18 +306,18 @@ private void clearFields() {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
+    private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField5;
-    private javax.swing.JTextField jTextField6;
     // End of variables declaration//GEN-END:variables
 }
+

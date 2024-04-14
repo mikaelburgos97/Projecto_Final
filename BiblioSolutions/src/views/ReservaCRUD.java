@@ -213,7 +213,15 @@ public class ReservaCRUD extends javax.swing.JFrame {
             new String [] {
                 "ID", "Fecha de Peticion", "Fecha de Entrega", "ID/Nombre Libro", "ID/Nombre Cliente", "Estado de Entrega"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
 
         jButton1.setText("Agregar");
