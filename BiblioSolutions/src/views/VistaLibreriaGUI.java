@@ -306,124 +306,23 @@ public class VistaLibreriaGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_txtTotalGananciasActionPerformed
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
-        // TODO add your handling code here:
-        LibroDTO libro = new LibroDTO();
-        
-        String autorName = txtAutor.getText();
-        double buyed_Price = Integer.parseInt(txtPrecioOriginal.getText());
-        String created_at = txtFechaCreacion.getText();
-        String desc_ubicacion = txtUbicacion.getText();
-        int id = Integer.parseInt(txtId.getText());
-        double mora_aument = Integer.parseInt(txtAumentoMora.getText());
-        String title = txtNombreLibro.getText();
-        double total_ganancias = Integer.parseInt(txtTotalGanancias.getText());
-        int total_stock = Integer.parseInt(txtStock.getText());
-        
-        libro.setAutorName(autorName);
-        libro.setBuyed_price(buyed_Price);
-        libro.setCreated_at(created_at);
-        libro.setDesc_ubicacion(desc_ubicacion);
-        libro.setId(id);
-        libro.setMora_aument(mora_aument);
-        libro.setTitle(title);
-        libro.setTotal_ganancies(total_ganancias);
-        libro.setTotal_stock(total_stock);
-        
-        LibroDAO libroAgregado = new LibroDAO();
-        int resultado = libroAgregado.agregar(libro);
-            if (resultado == 1) {
-                libroDAO.listar();
-                // Limpiar los campos de texto después de agregar una reserva
-                txtAutor.setText("");
-                txtPrecioOriginal.setText("");
-                txtFechaCreacion.setText("");
-                txtUbicacion.setText("");
-                txtId.setText("");
-                txtAumentoMora.setText("");
-                txtNombreLibro.setText("");
-                txtTotalGanancias.setText("");
-                txtStock.setText("");
-            }
         
         
     }//GEN-LAST:event_btnAgregarActionPerformed
 
     private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
         // TODO add your handling code here:
-        int fila = tblLibros.getSelectedRow();
-        if (fila != -1) {
-            LibroDTO libro = new LibroDTO();
-            
-            
-            libro.setAutorName(txtAutor.getText());
-            libro.setBuyed_price(Integer.parseInt(txtPrecioOriginal.getText()));
-            libro.setCreated_at(txtFechaCreacion.getText());
-            libro.setDesc_ubicacion(txtUbicacion.getText());
-            libro.setId(Integer.parseInt(txtId.getText()));
-            libro.setMora_aument(Integer.parseInt(txtAumentoMora.getText()));
-            libro.setTitle(txtNombreLibro.getText());
-            libro.setTotal_ganancies(Integer.parseInt(txtTotalGanancias.getText()));
-            libro.setTotal_stock(Integer.parseInt(txtStock.getText()));
-            
-            libro.setId((int) tblLibros.getValueAt(fila, 0));
-            
-            LibroDAO libroActualizado = new LibroDAO();
-            int resultado = libroActualizado.actualizar(libro);
-            if (resultado == 1) {
-                libroActualizado.listar();
-                JOptionPane.showMessageDialog(null, "Libro actualizado correctamente.");
-            } else {
-                JOptionPane.showMessageDialog(null, "Error al actualizar la informacion del libro.");
-            }
-            
-        } else {
-            JOptionPane.showMessageDialog(null, "Seleccione un libro para actualizar.");
-        }
-        
-        // Limpiar los campos de texto después de agregar una reserva
-                txtAutor.setText("");
-                txtPrecioOriginal.setText("");
-                txtFechaCreacion.setText("");
-                txtUbicacion.setText("");
-                txtId.setText("");
-                txtAumentoMora.setText("");
-                txtNombreLibro.setText("");
-                txtTotalGanancias.setText("");
-                txtStock.setText("");
+       
         
     }//GEN-LAST:event_btnActualizarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-        // TODO add your handling code here:
-        LibroDAO libroEliminado = new LibroDAO();
-        int fila = tblLibros.getSelectedRow();
-                    if (fila >= 0) {
-                        int id = (int) tblLibros.getValueAt(fila, 0);
-                        int resultado = libroDAO.eliminar(id);
-                        if (resultado == 1) {
-                            libroDAO.listar();
-                        }
-                    }
+       
     
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     private void btnVerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerActionPerformed
-        // TODO add your handling code here:
-        LibroDAO verLibros = new LibroDAO();
-        List<LibroDTO> libros = verLibros.listar();
-        Object[] objeto = new Object [9];
-        for (int i = 0; i < libros.size(); i++) {
-            objeto[0] = libros.get(i).getAutorName();
-            objeto[1] = libros.get(i).getBuyed_price();
-            objeto[2] = libros.get(i).getCreated_at();
-            objeto[3] = libros.get(i).getDaily_price();
-            objeto[4] = libros.get(i).getDesc_ubicacion();
-            objeto[5] = libros.get(i).getId();
-            objeto[6] = libros.get(i).getMora_aument();
-            objeto[7] = libros.get(i).getTitle();
-            objeto[8] = libros.get(i).getTotal_ganancies();
-            objeto[9] = libros.get(i).getAutorName();
-        }
+      
     }//GEN-LAST:event_btnVerActionPerformed
 
     private void txtFechaCreacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFechaCreacionActionPerformed
