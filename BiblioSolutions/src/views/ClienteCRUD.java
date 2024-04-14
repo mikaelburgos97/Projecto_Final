@@ -6,6 +6,8 @@ package views;
 
 import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import models.ClienteDAO;
 import models.ClienteDTO;
@@ -24,6 +26,7 @@ public class ClienteCRUD extends javax.swing.JFrame {
      */
      public ClienteCRUD() {
         initComponents();
+        agregarListenersCampos();
         
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -43,16 +46,30 @@ public class ClienteCRUD extends javax.swing.JFrame {
             }
         });
         
-        jTable1.getSelectionModel().addListSelectionListener(event -> {
-            if (!event.getValueIsAdjusting() && jTable1.getSelectedRow() != -1) {
-                int selectedRow = jTable1.getSelectedRow();
-                jTextField1.setText(jTable1.getValueAt(selectedRow, 1).toString()); // Cedula
-                jTextField2.setText(jTable1.getValueAt(selectedRow, 2).toString()); // Nombre Completo
-                jTextField3.setText(jTable1.getValueAt(selectedRow, 3).toString()); // Calle
-                jTextField4.setText(jTable1.getValueAt(selectedRow, 4).toString()); // Telefono
-                jTextField5.setText(jTable1.getValueAt(selectedRow, 5).toString()); // Correo
+        jButton4.addActionListener(new java.awt.event.ActionListener(){
+            public void actionPerformed(java.awt.event.ActionEvent evt){
+                cancelar();
+                
+                jButton2.setEnabled(false);
+                jButton3.setEnabled(false);
             }
         });
+        
+               jTable1.getSelectionModel().addListSelectionListener(event -> {
+                boolean selected = jTable1.getSelectedRow() != -1;
+                jButton2.setEnabled(selected); // Habilitar actualizar si se selecciona una fila
+                jButton3.setEnabled(selected); // Habilitar borrar si se selecciona una fila
+                jButton4.setEnabled(selected); // Habilitar cancelar si se selecciona una fila
+                jButton1.setEnabled(false); // Deshabilitar crear si se selecciona una fila
+                if (selected) {
+                    int selectedRow = jTable1.getSelectedRow();
+                    jTextField1.setText(jTable1.getValueAt(selectedRow, 1).toString());
+                    jTextField2.setText(jTable1.getValueAt(selectedRow, 2).toString());
+                    jTextField3.setText(jTable1.getValueAt(selectedRow, 3).toString());
+                    jTextField4.setText(jTable1.getValueAt(selectedRow, 4).toString());
+                    jTextField5.setText(jTable1.getValueAt(selectedRow, 5).toString());
+                }
+});
         
         listarClientes();
     }
@@ -125,6 +142,7 @@ public class ClienteCRUD extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Seleccione una fila para actualizar.");
         }
         limpiarCampos();
+        deshabilitarBotones();
     }
        private void eliminar() {
         int fila = jTable1.getSelectedRow();
@@ -135,6 +153,7 @@ public class ClienteCRUD extends javax.swing.JFrame {
                 listarClientes();
             }
         }
+        deshabilitarBotones();
     }
        
        private void limpiarCampos(){
@@ -145,8 +164,70 @@ public class ClienteCRUD extends javax.swing.JFrame {
             jTextField5.setText("");
        }
        
+       private void cancelar(){
+           limpiarCampos();
+            jTable1.getSelectionModel().clearSelection();
+            deshabilitarBotones();
+       }
        
+       private void deshabilitarBotones() {
+            jButton1.setEnabled(false);
+            jButton2.setEnabled(false);
+            jButton3.setEnabled(false);
+            jButton4.setEnabled(false);
+        }
+       
+       
+       private void verificarCampos() {
+    boolean todosCamposLlenos = !jTextField1.getText().isEmpty() &&
+                                 !jTextField2.getText().isEmpty() &&
+                                 !jTextField3.getText().isEmpty() &&
+                                 !jTextField4.getText().isEmpty() &&
+                                 !jTextField5.getText().isEmpty();
+    
+    boolean algunCampoConTexto = !jTextField1.getText().isEmpty() ||
+                                  !jTextField2.getText().isEmpty() ||
+                                  !jTextField3.getText().isEmpty() ||
+                                  !jTextField4.getText().isEmpty() ||
+                                  !jTextField5.getText().isEmpty();
+    
+    int selectedRow = jTable1.getSelectedRow();
+    boolean esFilaSeleccionada = selectedRow != -1;
+    boolean esFilaDiferente = esFilaSeleccionada &&
+                              (!jTextField1.getText().equals(jTable1.getValueAt(selectedRow, 1).toString()) ||
+                               !jTextField2.getText().equals(jTable1.getValueAt(selectedRow, 2).toString()) ||
+                               !jTextField3.getText().equals(jTable1.getValueAt(selectedRow, 3).toString()) ||
+                               !jTextField4.getText().equals(jTable1.getValueAt(selectedRow, 4).toString()) ||
+                               !jTextField5.getText().equals(jTable1.getValueAt(selectedRow, 5).toString()));
+    
+    jButton1.setEnabled(todosCamposLlenos && (!esFilaSeleccionada || esFilaDiferente));
+    jButton4.setEnabled(algunCampoConTexto);
+}
+       
+       private void agregarListenersCampos() {
+        DocumentListener listener = new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                verificarCampos();
+            }
 
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                verificarCampos();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                verificarCampos();
+            }
+        };
+
+        jTextField1.getDocument().addDocumentListener(listener);
+        jTextField2.getDocument().addDocumentListener(listener);
+        jTextField3.getDocument().addDocumentListener(listener);
+        jTextField4.getDocument().addDocumentListener(listener);
+        jTextField5.getDocument().addDocumentListener(listener);
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -172,6 +253,7 @@ public class ClienteCRUD extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -201,8 +283,18 @@ public class ClienteCRUD extends javax.swing.JFrame {
         jButton1.setText("Crear");
 
         jButton2.setText("Actualizar");
+        jButton2.setEnabled(false);
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jButton3.setText("Borrar");
+        jButton3.setEnabled(false);
+
+        jButton4.setText("Cancelar");
+        jButton4.setEnabled(false);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -226,11 +318,13 @@ public class ClienteCRUD extends javax.swing.JFrame {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 787, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jButton1)
-                        .addGap(252, 252, 252)
+                        .addGap(114, 114, 114)
                         .addComponent(jButton2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(128, 128, 128)
                         .addComponent(jButton3)
-                        .addGap(75, 75, 75))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton4)
+                        .addGap(109, 109, 109))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -262,12 +356,17 @@ public class ClienteCRUD extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(jButton2)
-                    .addComponent(jButton3))
+                    .addComponent(jButton3)
+                    .addComponent(jButton4))
                 .addGap(28, 28, 28))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -308,6 +407,7 @@ public class ClienteCRUD extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

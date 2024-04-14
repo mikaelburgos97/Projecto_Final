@@ -5,6 +5,8 @@
 package views;
 import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import models.ReservaDAO;
 import models.ReservaDTO;
@@ -24,6 +26,9 @@ public class ReservaCRUD extends javax.swing.JFrame {
      */
     public ReservaCRUD() {
         initComponents();
+        agregarListenersCampos();
+        
+        jButton3.setEnabled(false);
         // Agregar event listeners a los botones
     jButton1.addActionListener(new java.awt.event.ActionListener() {
         public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -42,28 +47,47 @@ public class ReservaCRUD extends javax.swing.JFrame {
             eliminar();
         }
     });
-
-    jButton4.addActionListener(new java.awt.event.ActionListener() {
+    
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
         public void actionPerformed(java.awt.event.ActionEvent evt) {
-            listarReservas();
+            cancelar();
         }
     });
+
     
     jTable1.getSelectionModel().addListSelectionListener(event -> {
-    if (!event.getValueIsAdjusting() && jTable1.getSelectedRow() != -1) {
-        int selectedRow = jTable1.getSelectedRow();
-        jTextField2.setText(jTable1.getValueAt(selectedRow, 1).toString()); // Fecha de Peticion
-        jTextField3.setText(jTable1.getValueAt(selectedRow, 2).toString()); // Fecha de Entrega
-        jTextField4.setText(jTable1.getValueAt(selectedRow, 3).toString()); // ID del Libro
-        jTextField5.setText(jTable1.getValueAt(selectedRow, 4).toString()); // ID del Cliente
-        jTextField7.setText(jTable1.getValueAt(selectedRow, 6).toString()); // Estado de la entrega
+    if (!event.getValueIsAdjusting()) {
+        boolean isRowSelected = jTable1.getSelectedRow() != -1;
+        jButton2.setEnabled(isRowSelected);
+        jButton3.setEnabled(isRowSelected);
+        jButton4.setEnabled(isRowSelected);
+        
+        if (isRowSelected) {
+            int selectedRow = jTable1.getSelectedRow();
+            jTextField2.setText(jTable1.getValueAt(selectedRow, 1).toString());
+            jTextField3.setText(jTable1.getValueAt(selectedRow, 2).toString());
+            jTextField4.setText(jTable1.getValueAt(selectedRow, 3).toString());
+            jTextField5.setText(jTable1.getValueAt(selectedRow, 4).toString());
+            jTextField7.setText(jTable1.getValueAt(selectedRow, 5).toString());
+            
+            verificarCampos(); // Llamada al método verificarCampos() después de llenar los campos
+        } else {
+            limpiarCamps();
+            jButton1.setEnabled(true);
+        }
     }
 });
+    
+    
+
+    
 
         
         
         listarReservas();
     }
+    
+    
     
         private void listarReservas() {
         List<ReservaDTO> reservas = reservaDAO.listar();
@@ -76,7 +100,6 @@ public class ReservaCRUD extends javax.swing.JFrame {
             objeto[2] = reservas.get(i).getFecha_entrega();
             objeto[3] = reservas.get(i).getLibro_id();
             objeto[4] = reservas.get(i).getCliente_id();
-//            objeto[5] = ""; // Saldo total (puedes calcular esto si lo necesitas)
             objeto[5] = reservas.get(i).getEstado();
             modelo.addRow(objeto);
         }
@@ -132,10 +155,12 @@ public class ReservaCRUD extends javax.swing.JFrame {
                     } else {
                         JOptionPane.showMessageDialog(null, "Error al actualizar la reserva.");
                     }
+                    deshabilitarBotones();
                 } else {
                     JOptionPane.showMessageDialog(null, "Seleccione una fila para actualizar.");
                 }
                 limpiarCamps();
+                jButton1.setEnabled(false);
             }
 
 
@@ -149,6 +174,7 @@ public class ReservaCRUD extends javax.swing.JFrame {
                         if (resultado == 1) {
                             listarReservas();
                         }
+                        deshabilitarBotones();
                     }
                 }
                 
@@ -161,7 +187,73 @@ public class ReservaCRUD extends javax.swing.JFrame {
                     jTextField7.setText("");
                 }
 
-               
+                
+        private void cancelar(){
+           limpiarCamps();
+           jTable1.getSelectionModel().clearSelection();
+           deshabilitarBotones();
+       }
+        
+        private void verificarCampos() {
+    boolean todosCamposLlenos = !jTextField2.getText().isEmpty() &&
+                                 !jTextField3.getText().isEmpty() &&
+                                 !jTextField4.getText().isEmpty() &&
+                                 !jTextField5.getText().isEmpty() &&
+                                 !jTextField7.getText().isEmpty();
+    
+    boolean algunCampoConTexto = !jTextField2.getText().isEmpty() ||
+                                  !jTextField3.getText().isEmpty() ||
+                                  !jTextField4.getText().isEmpty() ||
+                                  !jTextField5.getText().isEmpty() ||
+                                  !jTextField7.getText().isEmpty();
+    
+    int selectedRow = jTable1.getSelectedRow();
+    boolean esFilaSeleccionada = selectedRow != -1;
+    boolean esFilaDiferente = esFilaSeleccionada &&
+                              (!jTextField2.getText().equals(jTable1.getValueAt(selectedRow, 1).toString()) ||
+                               !jTextField3.getText().equals(jTable1.getValueAt(selectedRow, 2).toString()) ||
+                               !jTextField4.getText().equals(jTable1.getValueAt(selectedRow, 3).toString()) ||
+                               !jTextField5.getText().equals(jTable1.getValueAt(selectedRow, 4).toString()) ||
+                               !jTextField7.getText().equals(jTable1.getValueAt(selectedRow, 5).toString()));
+    
+    jButton1.setEnabled(todosCamposLlenos && (!esFilaSeleccionada || esFilaDiferente));
+    jButton4.setEnabled(algunCampoConTexto);
+}
+        
+        private void agregarListenersCampos() {
+        DocumentListener listener = new DocumentListener() {
+        @Override
+        public void insertUpdate(DocumentEvent e) {
+            verificarCampos();
+        }
+
+        @Override
+        public void removeUpdate(DocumentEvent e) {
+            verificarCampos();
+        }
+
+        @Override
+        public void changedUpdate(DocumentEvent e) {
+            verificarCampos();
+        }
+    };
+    
+    jTextField2.getDocument().addDocumentListener(listener);
+    jTextField3.getDocument().addDocumentListener(listener);
+    jTextField4.getDocument().addDocumentListener(listener);
+    jTextField5.getDocument().addDocumentListener(listener);
+    jTextField7.getDocument().addDocumentListener(listener);
+}
+        
+        
+     private void deshabilitarBotones() {
+        jButton1.setEnabled(false);
+        jButton2.setEnabled(false);
+        jButton3.setEnabled(false);
+        jButton4.setEnabled(false);
+    }       
+             
+             
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -228,45 +320,46 @@ public class ReservaCRUD extends javax.swing.JFrame {
         jScrollPane1.setViewportView(jTable1);
 
         jButton1.setText("Agregar");
+        jButton1.setEnabled(false);
 
         jButton2.setText("Actualizar");
+        jButton2.setEnabled(false);
 
         jButton3.setText("Borrar");
+        jButton3.setEnabled(false);
 
-        jButton4.setText("Ver Lista");
+        jButton4.setText("Cancelar");
+        jButton4.setEnabled(false);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(jButton1)
-                        .addGroup(layout.createSequentialGroup()
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel3)
-                                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel4)
-                                .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel5))
-                            .addGap(6, 6, 6)))
+                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3)
+                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4)
+                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5)
                     .addComponent(jLabel7)
                     .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 100, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 102, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 689, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButton1)
+                        .addGap(112, 112, 112)
                         .addComponent(jButton2)
-                        .addGap(137, 137, 137)
+                        .addGap(114, 114, 114)
                         .addComponent(jButton3)
-                        .addGap(157, 157, 157)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButton4)
-                        .addGap(79, 79, 79))))
+                        .addGap(66, 66, 66))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -294,13 +387,13 @@ public class ReservaCRUD extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 302, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(81, 81, 81)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 93, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(jButton2)
                     .addComponent(jButton3)
                     .addComponent(jButton4))
-                .addContainerGap(39, Short.MAX_VALUE))
+                .addGap(28, 28, 28))
         );
 
         pack();
