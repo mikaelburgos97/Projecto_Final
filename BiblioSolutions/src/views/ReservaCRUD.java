@@ -69,15 +69,15 @@ public class ReservaCRUD extends javax.swing.JFrame {
         List<ReservaDTO> reservas = reservaDAO.listar();
         modelo = (DefaultTableModel) jTable1.getModel();
         modelo.setRowCount(0); // Limpiar la tabla antes de llenarla
-        Object[] objeto = new Object[7];
+        Object[] objeto = new Object[6];
         for (int i = 0; i < reservas.size(); i++) {
             objeto[0] = reservas.get(i).getId();
             objeto[1] = reservas.get(i).getFecha_peticion();
             objeto[2] = reservas.get(i).getFecha_entrega();
             objeto[3] = reservas.get(i).getLibro_id();
             objeto[4] = reservas.get(i).getCliente_id();
-            objeto[5] = ""; // Saldo total (puedes calcular esto si lo necesitas)
-            objeto[6] = reservas.get(i).getEstado();
+//            objeto[5] = ""; // Saldo total (puedes calcular esto si lo necesitas)
+            objeto[5] = reservas.get(i).getEstado();
             modelo.addRow(objeto);
         }
         jTable1.setModel(modelo);
@@ -103,13 +103,9 @@ public class ReservaCRUD extends javax.swing.JFrame {
             int resultado = reservaDAO.agregar(reserva);
             if (resultado == 1) {
                 listarReservas();
-                // Limpiar los campos de texto después de agregar una reserva
-                jTextField2.setText("");
-                jTextField3.setText("");
-                jTextField4.setText("");
-                jTextField5.setText("");
-                jTextField7.setText("");
+                
             }
+            limpiarCamps();
         }
            
             private void actualizar() {
@@ -123,6 +119,8 @@ public class ReservaCRUD extends javax.swing.JFrame {
                     reserva.setLibro_id(Integer.parseInt(jTextField4.getText()));
                     reserva.setCliente_id(Integer.parseInt(jTextField5.getText()));
                     reserva.setEstado(jTextField7.getText());
+                    
+                    System.out.println(jTextField7.getText());
 
                     // Obtiene el ID desde la tabla (asumiendo que el ID está en la columna 0)
                     reserva.setId((int) jTable1.getValueAt(fila, 0));
@@ -137,11 +135,7 @@ public class ReservaCRUD extends javax.swing.JFrame {
                 } else {
                     JOptionPane.showMessageDialog(null, "Seleccione una fila para actualizar.");
                 }
-                jTextField2.setText("");
-                jTextField3.setText("");
-                jTextField4.setText("");
-                jTextField5.setText("");
-                jTextField7.setText("");
+                limpiarCamps();
             }
 
 
@@ -156,6 +150,15 @@ public class ReservaCRUD extends javax.swing.JFrame {
                             listarReservas();
                         }
                     }
+                }
+                
+                private void limpiarCamps(){
+                    // Limpiar los campos de texto después de agregar una reserva
+                    jTextField2.setText("");
+                    jTextField3.setText("");
+                    jTextField4.setText("");
+                    jTextField5.setText("");
+                    jTextField7.setText("");
                 }
 
                

@@ -96,6 +96,7 @@ public class ClienteCRUD extends javax.swing.JFrame {
             listarClientes();
             
         }
+        limpiarCampos();
     }
       
        private void actualizar() {
@@ -123,11 +124,7 @@ public class ClienteCRUD extends javax.swing.JFrame {
         } else {
             JOptionPane.showMessageDialog(null, "Seleccione una fila para actualizar.");
         }
-        jTextField1.setText("");
-        jTextField2.setText("");
-        jTextField3.setText("");
-        jTextField4.setText("");
-        jTextField5.setText("");
+        limpiarCampos();
     }
        private void eliminar() {
         int fila = jTable1.getSelectedRow();
@@ -139,6 +136,14 @@ public class ClienteCRUD extends javax.swing.JFrame {
             }
         }
     }
+       
+       private void limpiarCampos(){
+            jTextField1.setText("");
+            jTextField2.setText("");
+            jTextField3.setText("");
+            jTextField4.setText("");
+            jTextField5.setText("");
+       }
        
        
 
