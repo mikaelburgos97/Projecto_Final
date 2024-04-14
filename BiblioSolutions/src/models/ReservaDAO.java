@@ -21,6 +21,8 @@ public class ReservaDAO {
     Connection con;
     PreparedStatement ps;
     ResultSet rs;
+    
+    
 
     public List<ReservaDTO> listar() {
         String sql = "SELECT * FROM Reservaciones";
@@ -35,7 +37,7 @@ public class ReservaDAO {
                 ReservaDTO reserva = new ReservaDTO();
                 reserva.setId(rs.getInt(1));
                 reserva.setFecha_peticion(rs.getString(2));
-                reserva.setFecha_entrega(rs.getInt(3));
+                reserva.setFecha_entrega(rs.getString(3));
                 reserva.setLibro_id(rs.getInt(4));
                 reserva.setEstado(rs.getString(5));
                 reserva.setCliente_id(rs.getInt(6));
@@ -55,7 +57,7 @@ public class ReservaDAO {
             con = conectar.conectar();
             ps = con.prepareStatement(sql);
             ps.setString(1, reserva.getFecha_peticion());
-            ps.setInt(2, reserva.getFecha_entrega());
+            ps.setString(2, reserva.getFecha_entrega());
             ps.setInt(3, reserva.getLibro_id());
             ps.setString(4, reserva.getEstado());
             ps.setInt(5, reserva.getCliente_id());
@@ -67,32 +69,25 @@ public class ReservaDAO {
         return 1; // 1 si la inserción se realizó correctamente
     }
 
-    public int actualizar(ReservaDTO reserva) {
-        int resultado = 0;
-        String sql = "UPDATE Reservaciones SET fecha_peticion=?, fecha_entrega=?, libro_id=?, estado=?, cliente_id=? WHERE id=?";
+public int actualizar(ReservaDTO reserva) {
+    String sql = "UPDATE Reservaciones SET fecha_peticion=?, fecha_entrega=?, libro_id=?, estado=?, cliente_id=? WHERE id=?";
+    try (Connection con = conectar.conectar();
+         PreparedStatement ps = con.prepareStatement(sql)) {
 
-        try {
-            con = conectar.conectar();
-            ps = con.prepareStatement(sql);
-            ps.setString(1, reserva.getFecha_peticion());
-            ps.setInt(2, reserva.getFecha_entrega());
-            ps.setInt(3, reserva.getLibro_id());
-            ps.setString(4, reserva.getEstado());
-            ps.setInt(5, reserva.getCliente_id());
-            ps.setInt(6, reserva.getId());
+        ps.setString(1, reserva.getFecha_peticion());
+        ps.setString(2, reserva.getFecha_entrega());
+        ps.setInt(3, reserva.getLibro_id());
+        ps.setString(4, reserva.getEstado());
+        ps.setInt(5, reserva.getCliente_id());
+        ps.setInt(6, reserva.getId());
 
-            resultado = ps.executeUpdate();
-
-            if (resultado == 1) {
-                return 1; // 1 si la actualización se realizó correctamente
-            } else {
-                return 0; // 0 si ocurrió un error durante la actualización
-            }
-        } catch (SQLException e) {
-            System.out.println("Error al tratar de actualizar datos: " + e);
-        }
-        return resultado;
+        return ps.executeUpdate();
+    } catch (SQLException e) {
+        System.out.println("Error al tratar de actualizar datos: " + e);
+        return 0; // Retorna 0 para indicar fallo
     }
+}
+
 
     public int eliminar(int id) {
         int r = 0;

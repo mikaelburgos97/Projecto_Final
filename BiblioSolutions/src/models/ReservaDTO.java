@@ -11,7 +11,7 @@ package models;
 public class ReservaDTO {
     int id;
     String fecha_peticion;
-    int fecha_entrega;
+    String fecha_entrega;
     int libro_id;
     String estado;
     int cliente_id;
@@ -32,11 +32,11 @@ public class ReservaDTO {
         this.fecha_peticion = fecha_peticion;
     }
 
-    public int getFecha_entrega() {
+    public String getFecha_entrega() {
         return fecha_entrega;
     }
 
-    public void setFecha_entrega(int fecha_entrega) {
+    public void setFecha_entrega(String fecha_entrega) {
         this.fecha_entrega = fecha_entrega;
     }
 

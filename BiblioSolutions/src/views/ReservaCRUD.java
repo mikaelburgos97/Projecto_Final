@@ -4,6 +4,7 @@
  */
 package views;
 import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import models.ReservaDAO;
 import models.ReservaDTO;
@@ -47,6 +48,18 @@ public class ReservaCRUD extends javax.swing.JFrame {
             listarReservas();
         }
     });
+    
+    jTable1.getSelectionModel().addListSelectionListener(event -> {
+    if (!event.getValueIsAdjusting() && jTable1.getSelectedRow() != -1) {
+        int selectedRow = jTable1.getSelectedRow();
+        jTextField2.setText(jTable1.getValueAt(selectedRow, 1).toString()); // Fecha de Peticion
+        jTextField3.setText(jTable1.getValueAt(selectedRow, 2).toString()); // Fecha de Entrega
+        jTextField4.setText(jTable1.getValueAt(selectedRow, 3).toString()); // ID del Libro
+        jTextField5.setText(jTable1.getValueAt(selectedRow, 4).toString()); // ID del Cliente
+        jTextField7.setText(jTable1.getValueAt(selectedRow, 6).toString()); // Estado de la entrega
+    }
+});
+
         
         
         listarReservas();
@@ -75,7 +88,7 @@ public class ReservaCRUD extends javax.swing.JFrame {
 
             // Obtener los valores de los campos de texto
             String fechaPeticion = jTextField2.getText();
-            int fechaEntrega = Integer.parseInt(jTextField3.getText());
+            String fechaEntrega = jTextField3.getText();
             int libro = Integer.parseInt(jTextField4.getText());
             int cliente = Integer.parseInt(jTextField5.getText());
             String estado = jTextField7.getText();
@@ -99,32 +112,39 @@ public class ReservaCRUD extends javax.swing.JFrame {
             }
         }
            
-             private void actualizar() {
+            private void actualizar() {
                 int fila = jTable1.getSelectedRow();
-                if (fila >= 0) {
+                if (fila != -1) {
                     ReservaDTO reserva = new ReservaDTO();
 
                     // Obtener los valores de los campos de texto
-                    String fechaPeticion = jTextField2.getText();
-                    int fechaEntrega = Integer.parseInt(jTextField3.getText());
-                    int libro = Integer.parseInt(jTextField4.getText());
-                    int cliente = Integer.parseInt(jTextField5.getText());
-                    String estado = jTextField7.getText();
+                    reserva.setFecha_peticion(jTextField2.getText());
+                    reserva.setFecha_entrega(jTextField3.getText());
+                    reserva.setLibro_id(Integer.parseInt(jTextField4.getText()));
+                    reserva.setCliente_id(Integer.parseInt(jTextField5.getText()));
+                    reserva.setEstado(jTextField7.getText());
 
-                    // Asignar los valores a la instancia de ReservaDTO
-                    reserva.setFecha_peticion(fechaPeticion);
-                    reserva.setFecha_entrega(fechaEntrega);
-                    reserva.setLibro_id(libro);
-                    reserva.setCliente_id(cliente);
-                    reserva.setEstado(estado);
+                    // Obtiene el ID desde la tabla (asumiendo que el ID está en la columna 0)
+                    reserva.setId((int) jTable1.getValueAt(fila, 0));
 
-                    reserva.setId((int) modelo.getValueAt(fila, 0));
                     int resultado = reservaDAO.actualizar(reserva);
                     if (resultado == 1) {
-                        listarReservas();
+                        listarReservas(); // Refresca la lista en la tabla
+                        JOptionPane.showMessageDialog(null, "Reserva actualizada correctamente.");
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Error al actualizar la reserva.");
                     }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Seleccione una fila para actualizar.");
                 }
+                jTextField2.setText("");
+                jTextField3.setText("");
+                jTextField4.setText("");
+                jTextField5.setText("");
+                jTextField7.setText("");
             }
+
+
         
         
                 private void eliminar() {
@@ -148,8 +168,6 @@ public class ReservaCRUD extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jTextField2 = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
@@ -158,8 +176,6 @@ public class ReservaCRUD extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jTextField4 = new javax.swing.JTextField();
         jTextField5 = new javax.swing.JTextField();
-        jLabel6 = new javax.swing.JLabel();
-        jTextField6 = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         jTextField7 = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -171,8 +187,6 @@ public class ReservaCRUD extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel1.setText("ID");
-
         jLabel2.setText("Fecha de Peticion");
 
         jTextField2.addActionListener(new java.awt.event.ActionListener() {
@@ -183,23 +197,21 @@ public class ReservaCRUD extends javax.swing.JFrame {
 
         jLabel3.setText("Fecha de Entrega");
 
-        jLabel4.setText("ID o Nombre del Libro");
+        jLabel4.setText("ID del Libro");
 
-        jLabel5.setText("ID o Nombre del Cliente");
-
-        jLabel6.setText("Saldo Total");
+        jLabel5.setText("ID del Cliente");
 
         jLabel7.setText("Estado de Entrega");
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "ID", "Fecha de Peticion", "Fecha de Entrega", "ID/Nombre Libro", "ID/Nombre Cliente", "Saldo Total", "Estado de Entrega"
+                "ID", "Fecha de Peticion", "Fecha de Entrega", "ID/Nombre Libro", "ID/Nombre Cliente", "Estado de Entrega"
             }
         ));
         jScrollPane1.setViewportView(jTable1);
@@ -218,24 +230,23 @@ public class ReservaCRUD extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton1)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jLabel1)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel2)
-                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel3)
-                        .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel4)
-                        .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel5)
-                        .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel6)
-                        .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel7)
-                        .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 69, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jButton1)
+                        .addGroup(layout.createSequentialGroup()
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel3)
+                                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel4)
+                                .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel5))
+                            .addGap(6, 6, 6)))
+                    .addComponent(jLabel7)
+                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 100, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 689, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -249,14 +260,9 @@ public class ReservaCRUD extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 302, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -272,15 +278,12 @@ public class ReservaCRUD extends javax.swing.JFrame {
                         .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel6)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel7)
+                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(28, 28, 28)
+                        .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 302, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(81, 81, 81)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(jButton2)
@@ -336,21 +339,17 @@ public class ReservaCRUD extends javax.swing.JFrame {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField5;
-    private javax.swing.JTextField jTextField6;
     private javax.swing.JTextField jTextField7;
     // End of variables declaration//GEN-END:variables
 
