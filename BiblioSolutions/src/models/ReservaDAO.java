@@ -10,7 +10,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import models.utils.DateHandler;
 
 /**
  *
@@ -24,7 +23,7 @@ public class ReservaDAO {
     ResultSet rs;
 
     public List<ReservaDTO> listar() {
-        String sql = "SELECT * FROM Reservas";
+        String sql = "SELECT * FROM Reservaciones";
         List<ReservaDTO> reservas = new ArrayList<>();
 
         try {
@@ -35,11 +34,11 @@ public class ReservaDAO {
             while (rs.next()) {
                 ReservaDTO reserva = new ReservaDTO();
                 reserva.setId(rs.getInt(1));
-                reserva.setCreated_at(DateHandler.parseStringToDate(rs.getString(2)));
-                reserva.setDelivered_at(DateHandler.parseStringToDate(rs.getString(3)));
-                reserva.setStatus(rs.getString(4));
-                reserva.setBook_id(rs.getString(5));
-                reserva.setClient_id(rs.getString(6));
+                reserva.setFecha_peticion(rs.getString(2));
+                reserva.setFecha_entrega(rs.getInt(3));
+                reserva.setLibro_id(rs.getInt(4));
+                reserva.setEstado(rs.getString(5));
+                reserva.setCliente_id(rs.getInt(6));
 
                 reservas.add(reserva);
             }
@@ -50,16 +49,16 @@ public class ReservaDAO {
     }
 
     public int agregar(ReservaDTO reserva) {
-        String sql = "INSERT INTO Reservas (created_at, delivered_at, status, book_id, client_id) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Reservaciones (fecha_peticion, fecha_entrega, libro_id, estado, cliente_id) VALUES (?, ?, ?, ?, ?)";
 
         try {
             con = conectar.conectar();
             ps = con.prepareStatement(sql);
-            ps.setObject(1, reserva.getCreated_at());
-            ps.setObject(2, reserva.getDelivered_at());
-            ps.setString(3, reserva.getStatus());
-            ps.setString(4, reserva.getBook_id());
-            ps.setString(5, reserva.getClient_id());
+            ps.setString(1, reserva.getFecha_peticion());
+            ps.setInt(2, reserva.getFecha_entrega());
+            ps.setInt(3, reserva.getLibro_id());
+            ps.setString(4, reserva.getEstado());
+            ps.setInt(5, reserva.getCliente_id());
             ps.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Error al tratar de insertar datos: " + e);
@@ -70,16 +69,16 @@ public class ReservaDAO {
 
     public int actualizar(ReservaDTO reserva) {
         int resultado = 0;
-        String sql = "UPDATE Reservas SET created_at=?, delivered_at=?, status=?, book_id=?, client_id=? WHERE id=?";
+        String sql = "UPDATE Reservaciones SET fecha_peticion=?, fecha_entrega=?, libro_id=?, estado=?, cliente_id=? WHERE id=?";
 
         try {
             con = conectar.conectar();
             ps = con.prepareStatement(sql);
-            ps.setObject(1, reserva.getCreated_at());
-            ps.setObject(2, reserva.getDelivered_at());
-            ps.setString(3, reserva.getStatus());
-            ps.setString(4, reserva.getBook_id());
-            ps.setString(5, reserva.getClient_id());
+            ps.setString(1, reserva.getFecha_peticion());
+            ps.setInt(2, reserva.getFecha_entrega());
+            ps.setInt(3, reserva.getLibro_id());
+            ps.setString(4, reserva.getEstado());
+            ps.setInt(5, reserva.getCliente_id());
             ps.setInt(6, reserva.getId());
 
             resultado = ps.executeUpdate();
@@ -94,12 +93,10 @@ public class ReservaDAO {
         }
         return resultado;
     }
-    
-     public int eliminar(int id) {
 
+    public int eliminar(int id) {
         int r = 0;
-
-        String sql = "delete from Reservas where id=" + id;
+        String sql = "DELETE FROM Reservaciones WHERE id=" + id;
 
         try {
             con = conectar.conectar();
@@ -115,6 +112,4 @@ public class ReservaDAO {
         }
         return r;
     }
-    
-
 }

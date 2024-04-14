@@ -3,20 +3,142 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package views;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
+import models.ReservaDAO;
+import models.ReservaDTO;
+import models.utils.DateHandler;
 
 /**
  *
  * @author mikae
  */
 public class ReservaCRUD extends javax.swing.JFrame {
+    
+    ReservaDAO reservaDAO = new ReservaDAO();
+    DefaultTableModel modelo = new DefaultTableModel();
 
     /**
      * Creates new form ReservaCRUD
      */
     public ReservaCRUD() {
         initComponents();
-    }
+        // Agregar event listeners a los botones
+    jButton1.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+            agregar();
+        }
+    });
 
+    jButton2.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+            actualizar();
+        }
+    });
+
+    jButton3.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+            eliminar();
+        }
+    });
+
+    jButton4.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+            listarReservas();
+        }
+    });
+        
+        
+        listarReservas();
+    }
+    
+        private void listarReservas() {
+        List<ReservaDTO> reservas = reservaDAO.listar();
+        modelo = (DefaultTableModel) jTable1.getModel();
+        modelo.setRowCount(0); // Limpiar la tabla antes de llenarla
+        Object[] objeto = new Object[7];
+        for (int i = 0; i < reservas.size(); i++) {
+            objeto[0] = reservas.get(i).getId();
+            objeto[1] = reservas.get(i).getFecha_peticion();
+            objeto[2] = reservas.get(i).getFecha_entrega();
+            objeto[3] = reservas.get(i).getLibro_id();
+            objeto[4] = reservas.get(i).getCliente_id();
+            objeto[5] = ""; // Saldo total (puedes calcular esto si lo necesitas)
+            objeto[6] = reservas.get(i).getEstado();
+            modelo.addRow(objeto);
+        }
+        jTable1.setModel(modelo);
+    }
+        
+        private void agregar() {
+            ReservaDTO reserva = new ReservaDTO();
+
+            // Obtener los valores de los campos de texto
+            String fechaPeticion = jTextField2.getText();
+            int fechaEntrega = Integer.parseInt(jTextField3.getText());
+            int libro = Integer.parseInt(jTextField4.getText());
+            int cliente = Integer.parseInt(jTextField5.getText());
+            String estado = jTextField7.getText();
+
+            // Asignar los valores a la instancia de ReservaDTO
+            reserva.setFecha_peticion(fechaPeticion);
+            reserva.setFecha_entrega(fechaEntrega);
+            reserva.setLibro_id(libro);
+            reserva.setCliente_id(cliente);
+            reserva.setEstado(estado);
+
+            int resultado = reservaDAO.agregar(reserva);
+            if (resultado == 1) {
+                listarReservas();
+                // Limpiar los campos de texto después de agregar una reserva
+                jTextField2.setText("");
+                jTextField3.setText("");
+                jTextField4.setText("");
+                jTextField5.setText("");
+                jTextField7.setText("");
+            }
+        }
+           
+             private void actualizar() {
+                int fila = jTable1.getSelectedRow();
+                if (fila >= 0) {
+                    ReservaDTO reserva = new ReservaDTO();
+
+                    // Obtener los valores de los campos de texto
+                    String fechaPeticion = jTextField2.getText();
+                    int fechaEntrega = Integer.parseInt(jTextField3.getText());
+                    int libro = Integer.parseInt(jTextField4.getText());
+                    int cliente = Integer.parseInt(jTextField5.getText());
+                    String estado = jTextField7.getText();
+
+                    // Asignar los valores a la instancia de ReservaDTO
+                    reserva.setFecha_peticion(fechaPeticion);
+                    reserva.setFecha_entrega(fechaEntrega);
+                    reserva.setLibro_id(libro);
+                    reserva.setCliente_id(cliente);
+                    reserva.setEstado(estado);
+
+                    reserva.setId((int) modelo.getValueAt(fila, 0));
+                    int resultado = reservaDAO.actualizar(reserva);
+                    if (resultado == 1) {
+                        listarReservas();
+                    }
+                }
+            }
+        
+        
+                private void eliminar() {
+                    int fila = jTable1.getSelectedRow();
+                    if (fila >= 0) {
+                        int id = (int) modelo.getValueAt(fila, 0);
+                        int resultado = reservaDAO.eliminar(id);
+                        if (resultado == 1) {
+                            listarReservas();
+                        }
+                    }
+                }
+
+               
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -231,4 +353,6 @@ public class ReservaCRUD extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField6;
     private javax.swing.JTextField jTextField7;
     // End of variables declaration//GEN-END:variables
+
+
 }
