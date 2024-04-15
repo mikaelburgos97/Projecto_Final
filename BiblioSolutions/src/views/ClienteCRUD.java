@@ -261,6 +261,7 @@ public class ClienteCRUD extends javax.swing.JFrame {
         jMenu3 = new javax.swing.JMenu();
         jMenu4 = new javax.swing.JMenu();
         jMenu5 = new javax.swing.JMenu();
+        jMenu6 = new javax.swing.JMenu();
 
         jMenu1.setText("File");
         jMenuBar1.add(jMenu1);
@@ -327,6 +328,14 @@ public class ClienteCRUD extends javax.swing.JFrame {
             }
         });
         jMenuBar2.add(jMenu5);
+
+        jMenu6.setText("Salir");
+        jMenu6.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMenu6MouseClicked(evt);
+            }
+        });
+        jMenuBar2.add(jMenu6);
 
         setJMenuBar(jMenuBar2);
 
@@ -416,6 +425,11 @@ public class ClienteCRUD extends javax.swing.JFrame {
         setActualViewInvisible();
     }//GEN-LAST:event_jMenu5MouseClicked
 
+    private void jMenu6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu6MouseClicked
+        // TODO add your handling code here:
+               System.exit(WIDTH);
+    }//GEN-LAST:event_jMenu6MouseClicked
+
     private void setActualViewInvisible() {
         this.setVisible(false);
     }
@@ -470,6 +484,7 @@ public class ClienteCRUD extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;
     private javax.swing.JMenu jMenu5;
+    private javax.swing.JMenu jMenu6;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuBar jMenuBar2;
     private javax.swing.JScrollPane jScrollPane1;
