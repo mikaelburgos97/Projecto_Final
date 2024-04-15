@@ -23,35 +23,34 @@ public class LibrosCRUD extends javax.swing.JFrame {
         initComponents();
         libroDAO = new LibroDAO();
         cargarTabla();
-        
-        
-        jButton1.addActionListener(new java.awt.event.ActionListener(){
-            public void actionPerformed(java.awt.event.ActionEvent evt){
+
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
         });
-        
-        jButton2.addActionListener(new java.awt.event.ActionListener(){
+
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
             @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt){
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
             }
         });
-        
-        jButton3.addActionListener(new java.awt.event.ActionListener(){
+
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
             @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt){
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
             }
         });
-        
-        jButton4.addActionListener(new java.awt.event.ActionListener(){
+
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
             @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt){
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton4ActionPerformed(evt);
             }
         });
-        
+
         // Agregar event listener para la selección de la tabla
         jTable1.getSelectionModel().addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent event) {
@@ -86,7 +85,7 @@ public class LibrosCRUD extends javax.swing.JFrame {
     }
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {
-    // Actualizar libro
+        // Actualizar libro
         int filaSeleccionada = jTable1.getSelectedRow();
         if (filaSeleccionada != -1) {
             int id = Integer.parseInt(jTable1.getValueAt(filaSeleccionada, 0).toString());
@@ -156,40 +155,26 @@ public class LibrosCRUD extends javax.swing.JFrame {
             model.addRow(row);
         }
     }
-    
-      private void llenarCampos() {
-            int filaSeleccionada = jTable1.getSelectedRow();
-            if (filaSeleccionada != -1) {
-                String id = jTable1.getValueAt(filaSeleccionada, 0).toString();
-                String nombre = jTable1.getValueAt(filaSeleccionada, 2).toString();
-                String stockTotal = jTable1.getValueAt(filaSeleccionada, 3).toString();
-                String autor = jTable1.getValueAt(filaSeleccionada, 4).toString();
-                String precioComprado = jTable1.getValueAt(filaSeleccionada, 5).toString();
-                String precioPorDia = jTable1.getValueAt(filaSeleccionada, 6).toString();
-                String mora = jTable1.getValueAt(filaSeleccionada, 7).toString();
 
-                jTextField1.setText(nombre);
-                jTextField2.setText(stockTotal);
-                jTextField3.setText(autor);
-                jTextField4.setText(precioComprado);
-                jTextField5.setText(precioPorDia);
-                jTextField6.setText(mora);
-            }
+    private void llenarCampos() {
+        int filaSeleccionada = jTable1.getSelectedRow();
+        if (filaSeleccionada != -1) {
+            String id = jTable1.getValueAt(filaSeleccionada, 0).toString();
+            String nombre = jTable1.getValueAt(filaSeleccionada, 2).toString();
+            String stockTotal = jTable1.getValueAt(filaSeleccionada, 3).toString();
+            String autor = jTable1.getValueAt(filaSeleccionada, 4).toString();
+            String precioComprado = jTable1.getValueAt(filaSeleccionada, 5).toString();
+            String precioPorDia = jTable1.getValueAt(filaSeleccionada, 6).toString();
+            String mora = jTable1.getValueAt(filaSeleccionada, 7).toString();
+
+            jTextField1.setText(nombre);
+            jTextField2.setText(stockTotal);
+            jTextField3.setText(autor);
+            jTextField4.setText(precioComprado);
+            jTextField5.setText(precioPorDia);
+            jTextField6.setText(mora);
         }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -219,6 +204,10 @@ public class LibrosCRUD extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        jMenu2 = new javax.swing.JMenu();
+        jMenu3 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -256,6 +245,32 @@ public class LibrosCRUD extends javax.swing.JFrame {
         jButton3.setText("Borrar");
 
         jButton4.setText("Cancelar");
+
+        jMenu1.setText("Libros");
+        jMenuBar1.add(jMenu1);
+
+        jMenu2.setText("Clientes");
+        jMenu2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMenu2MouseClicked(evt);
+            }
+        });
+        jMenu2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenu2ActionPerformed(evt);
+            }
+        });
+        jMenuBar1.add(jMenu2);
+
+        jMenu3.setText("Reservas");
+        jMenu3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMenu3MouseClicked(evt);
+            }
+        });
+        jMenuBar1.add(jMenu3);
+
+        setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -341,12 +356,38 @@ public class LibrosCRUD extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton3)
                     .addComponent(jButton4))
-                .addGap(87, 116, Short.MAX_VALUE))
+                .addGap(87, 95, Short.MAX_VALUE))
             .addComponent(jScrollPane1)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jMenu2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu2ActionPerformed
+
+
+    }//GEN-LAST:event_jMenu2ActionPerformed
+
+    private void jMenu2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu2MouseClicked
+        // TODO add your handling code here:
+        System.out.println("aaa");
+        ClienteCRUD cli = new ClienteCRUD();
+        cli.setVisible(true);
+        setActualViewInvisible();
+
+    }//GEN-LAST:event_jMenu2MouseClicked
+
+    private void jMenu3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu3MouseClicked
+        // TODO add your handling code here:
+        System.out.println("aaa");
+        ReservaCRUD res = new ReservaCRUD();
+        res.setVisible(true);
+        setActualViewInvisible();
+    }//GEN-LAST:event_jMenu3MouseClicked
+
+    private void setActualViewInvisible() {
+        this.setVisible(false);
+    }
 
     /**
      * @param args the command line arguments
@@ -395,6 +436,10 @@ public class LibrosCRUD extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenu jMenu3;
+    private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField1;

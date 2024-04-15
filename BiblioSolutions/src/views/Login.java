@@ -36,6 +36,10 @@ public class Login extends javax.swing.JFrame {
                     
                     if(isLoginSuccessful){
                         JOptionPane.showMessageDialog(null, "Login exitoso");
+                        LibrosCRUD lib = new LibrosCRUD();
+                        setActualViewInvisible();
+                        
+                        lib.setVisible(true);
                     } else {
                         JOptionPane.showMessageDialog(null, "Credenciales incorrectas", "Error de login", JOptionPane.ERROR_MESSAGE);
                     }
@@ -143,6 +147,12 @@ public class Login extends javax.swing.JFrame {
             }
         });
     }
+    
+    
+    private void setActualViewInvisible() {
+        this.setVisible(false);
+    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;

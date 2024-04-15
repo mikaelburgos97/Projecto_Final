@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package views;
+
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.event.DocumentEvent;
@@ -17,7 +18,7 @@ import models.utils.DateHandler;
  * @author mikae
  */
 public class ReservaCRUD extends javax.swing.JFrame {
-    
+
     ReservaDAO reservaDAO = new ReservaDAO();
     DefaultTableModel modelo = new DefaultTableModel();
 
@@ -27,69 +28,60 @@ public class ReservaCRUD extends javax.swing.JFrame {
     public ReservaCRUD() {
         initComponents();
         agregarListenersCampos();
-        
+
         jButton3.setEnabled(false);
         // Agregar event listeners a los botones
-    jButton1.addActionListener(new java.awt.event.ActionListener() {
-        public void actionPerformed(java.awt.event.ActionEvent evt) {
-            agregar();
-        }
-    });
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                agregar();
+            }
+        });
 
-    jButton2.addActionListener(new java.awt.event.ActionListener() {
-        public void actionPerformed(java.awt.event.ActionEvent evt) {
-            actualizar();
-        }
-    });
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                actualizar();
+            }
+        });
 
-    jButton3.addActionListener(new java.awt.event.ActionListener() {
-        public void actionPerformed(java.awt.event.ActionEvent evt) {
-            eliminar();
-        }
-    });
-    
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                eliminar();
+            }
+        });
+
         jButton4.addActionListener(new java.awt.event.ActionListener() {
-        public void actionPerformed(java.awt.event.ActionEvent evt) {
-            cancelar();
-        }
-    });
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelar();
+            }
+        });
 
-    
-    jTable1.getSelectionModel().addListSelectionListener(event -> {
-    if (!event.getValueIsAdjusting()) {
-        boolean isRowSelected = jTable1.getSelectedRow() != -1;
-        jButton2.setEnabled(isRowSelected);
-        jButton3.setEnabled(isRowSelected);
-        jButton4.setEnabled(isRowSelected);
-        
-        if (isRowSelected) {
-            int selectedRow = jTable1.getSelectedRow();
-            jTextField2.setText(jTable1.getValueAt(selectedRow, 1).toString());
-            jTextField3.setText(jTable1.getValueAt(selectedRow, 2).toString());
-            jTextField4.setText(jTable1.getValueAt(selectedRow, 3).toString());
-            jTextField5.setText(jTable1.getValueAt(selectedRow, 4).toString());
-            jTextField7.setText(jTable1.getValueAt(selectedRow, 5).toString());
-            
-            verificarCampos(); // Llamada al método verificarCampos() después de llenar los campos
-        } else {
-            limpiarCamps();
-            jButton1.setEnabled(true);
-        }
-    }
-});
-    
-    
+        jTable1.getSelectionModel().addListSelectionListener(event -> {
+            if (!event.getValueIsAdjusting()) {
+                boolean isRowSelected = jTable1.getSelectedRow() != -1;
+                jButton2.setEnabled(isRowSelected);
+                jButton3.setEnabled(isRowSelected);
+                jButton4.setEnabled(isRowSelected);
 
-    
+                if (isRowSelected) {
+                    int selectedRow = jTable1.getSelectedRow();
+                    jTextField2.setText(jTable1.getValueAt(selectedRow, 1).toString());
+                    jTextField3.setText(jTable1.getValueAt(selectedRow, 2).toString());
+                    jTextField4.setText(jTable1.getValueAt(selectedRow, 3).toString());
+                    jTextField5.setText(jTable1.getValueAt(selectedRow, 4).toString());
+                    jTextField7.setText(jTable1.getValueAt(selectedRow, 5).toString());
 
-        
-        
+                    verificarCampos(); // Llamada al método verificarCampos() después de llenar los campos
+                } else {
+                    limpiarCamps();
+                    jButton1.setEnabled(true);
+                }
+            }
+        });
+
         listarReservas();
     }
-    
-    
-    
-        private void listarReservas() {
+
+    private void listarReservas() {
         List<ReservaDTO> reservas = reservaDAO.listar();
         modelo = (DefaultTableModel) jTable1.getModel();
         modelo.setRowCount(0); // Limpiar la tabla antes de llenarla
@@ -105,155 +97,149 @@ public class ReservaCRUD extends javax.swing.JFrame {
         }
         jTable1.setModel(modelo);
     }
-        
-        private void agregar() {
+
+    private void agregar() {
+        ReservaDTO reserva = new ReservaDTO();
+
+        // Obtener los valores de los campos de texto
+        String fechaPeticion = jTextField2.getText();
+        String fechaEntrega = jTextField3.getText();
+        int libro = Integer.parseInt(jTextField4.getText());
+        int cliente = Integer.parseInt(jTextField5.getText());
+        String estado = jTextField7.getText();
+
+        // Asignar los valores a la instancia de ReservaDTO
+        reserva.setFecha_peticion(fechaPeticion);
+        reserva.setFecha_entrega(fechaEntrega);
+        reserva.setLibro_id(libro);
+        reserva.setCliente_id(cliente);
+        reserva.setEstado(estado);
+
+        int resultado = reservaDAO.agregar(reserva);
+        if (resultado == 1) {
+            listarReservas();
+
+        }
+        limpiarCamps();
+    }
+
+    private void actualizar() {
+        int fila = jTable1.getSelectedRow();
+        if (fila != -1) {
             ReservaDTO reserva = new ReservaDTO();
 
             // Obtener los valores de los campos de texto
-            String fechaPeticion = jTextField2.getText();
-            String fechaEntrega = jTextField3.getText();
-            int libro = Integer.parseInt(jTextField4.getText());
-            int cliente = Integer.parseInt(jTextField5.getText());
-            String estado = jTextField7.getText();
+            reserva.setFecha_peticion(jTextField2.getText());
+            reserva.setFecha_entrega(jTextField3.getText());
+            reserva.setLibro_id(Integer.parseInt(jTextField4.getText()));
+            reserva.setCliente_id(Integer.parseInt(jTextField5.getText()));
+            reserva.setEstado(jTextField7.getText());
 
-            // Asignar los valores a la instancia de ReservaDTO
-            reserva.setFecha_peticion(fechaPeticion);
-            reserva.setFecha_entrega(fechaEntrega);
-            reserva.setLibro_id(libro);
-            reserva.setCliente_id(cliente);
-            reserva.setEstado(estado);
+            System.out.println(jTextField7.getText());
 
-            int resultado = reservaDAO.agregar(reserva);
+            // Obtiene el ID desde la tabla (asumiendo que el ID está en la columna 0)
+            reserva.setId((int) jTable1.getValueAt(fila, 0));
+
+            int resultado = reservaDAO.actualizar(reserva);
+            if (resultado == 1) {
+                listarReservas(); // Refresca la lista en la tabla
+                JOptionPane.showMessageDialog(null, "Reserva actualizada correctamente.");
+            } else {
+                JOptionPane.showMessageDialog(null, "Error al actualizar la reserva.");
+            }
+            deshabilitarBotones();
+        } else {
+            JOptionPane.showMessageDialog(null, "Seleccione una fila para actualizar.");
+        }
+        limpiarCamps();
+        jButton1.setEnabled(false);
+    }
+
+    private void eliminar() {
+        int fila = jTable1.getSelectedRow();
+        if (fila >= 0) {
+            int id = (int) modelo.getValueAt(fila, 0);
+            int resultado = reservaDAO.eliminar(id);
             if (resultado == 1) {
                 listarReservas();
-                
             }
-            limpiarCamps();
+            deshabilitarBotones();
         }
-           
-            private void actualizar() {
-                int fila = jTable1.getSelectedRow();
-                if (fila != -1) {
-                    ReservaDTO reserva = new ReservaDTO();
+    }
 
-                    // Obtener los valores de los campos de texto
-                    reserva.setFecha_peticion(jTextField2.getText());
-                    reserva.setFecha_entrega(jTextField3.getText());
-                    reserva.setLibro_id(Integer.parseInt(jTextField4.getText()));
-                    reserva.setCliente_id(Integer.parseInt(jTextField5.getText()));
-                    reserva.setEstado(jTextField7.getText());
-                    
-                    System.out.println(jTextField7.getText());
+    private void limpiarCamps() {
+        // Limpiar los campos de texto después de agregar una reserva
+        jTextField2.setText("");
+        jTextField3.setText("");
+        jTextField4.setText("");
+        jTextField5.setText("");
+        jTextField7.setText("");
+    }
 
-                    // Obtiene el ID desde la tabla (asumiendo que el ID está en la columna 0)
-                    reserva.setId((int) jTable1.getValueAt(fila, 0));
+    private void cancelar() {
+        limpiarCamps();
+        jTable1.getSelectionModel().clearSelection();
+        deshabilitarBotones();
+    }
 
-                    int resultado = reservaDAO.actualizar(reserva);
-                    if (resultado == 1) {
-                        listarReservas(); // Refresca la lista en la tabla
-                        JOptionPane.showMessageDialog(null, "Reserva actualizada correctamente.");
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Error al actualizar la reserva.");
-                    }
-                    deshabilitarBotones();
-                } else {
-                    JOptionPane.showMessageDialog(null, "Seleccione una fila para actualizar.");
-                }
-                limpiarCamps();
-                jButton1.setEnabled(false);
-            }
+    private void verificarCampos() {
+        boolean todosCamposLlenos = !jTextField2.getText().isEmpty()
+                && !jTextField3.getText().isEmpty()
+                && !jTextField4.getText().isEmpty()
+                && !jTextField5.getText().isEmpty()
+                && !jTextField7.getText().isEmpty();
 
+        boolean algunCampoConTexto = !jTextField2.getText().isEmpty()
+                || !jTextField3.getText().isEmpty()
+                || !jTextField4.getText().isEmpty()
+                || !jTextField5.getText().isEmpty()
+                || !jTextField7.getText().isEmpty();
 
-        
-        
-                private void eliminar() {
-                    int fila = jTable1.getSelectedRow();
-                    if (fila >= 0) {
-                        int id = (int) modelo.getValueAt(fila, 0);
-                        int resultado = reservaDAO.eliminar(id);
-                        if (resultado == 1) {
-                            listarReservas();
-                        }
-                        deshabilitarBotones();
-                    }
-                }
-                
-                private void limpiarCamps(){
-                    // Limpiar los campos de texto después de agregar una reserva
-                    jTextField2.setText("");
-                    jTextField3.setText("");
-                    jTextField4.setText("");
-                    jTextField5.setText("");
-                    jTextField7.setText("");
-                }
+        int selectedRow = jTable1.getSelectedRow();
+        boolean esFilaSeleccionada = selectedRow != -1;
+        boolean esFilaDiferente = esFilaSeleccionada
+                && (!jTextField2.getText().equals(jTable1.getValueAt(selectedRow, 1).toString())
+                || !jTextField3.getText().equals(jTable1.getValueAt(selectedRow, 2).toString())
+                || !jTextField4.getText().equals(jTable1.getValueAt(selectedRow, 3).toString())
+                || !jTextField5.getText().equals(jTable1.getValueAt(selectedRow, 4).toString())
+                || !jTextField7.getText().equals(jTable1.getValueAt(selectedRow, 5).toString()));
 
-                
-        private void cancelar(){
-           limpiarCamps();
-           jTable1.getSelectionModel().clearSelection();
-           deshabilitarBotones();
-       }
-        
-        private void verificarCampos() {
-    boolean todosCamposLlenos = !jTextField2.getText().isEmpty() &&
-                                 !jTextField3.getText().isEmpty() &&
-                                 !jTextField4.getText().isEmpty() &&
-                                 !jTextField5.getText().isEmpty() &&
-                                 !jTextField7.getText().isEmpty();
-    
-    boolean algunCampoConTexto = !jTextField2.getText().isEmpty() ||
-                                  !jTextField3.getText().isEmpty() ||
-                                  !jTextField4.getText().isEmpty() ||
-                                  !jTextField5.getText().isEmpty() ||
-                                  !jTextField7.getText().isEmpty();
-    
-    int selectedRow = jTable1.getSelectedRow();
-    boolean esFilaSeleccionada = selectedRow != -1;
-    boolean esFilaDiferente = esFilaSeleccionada &&
-                              (!jTextField2.getText().equals(jTable1.getValueAt(selectedRow, 1).toString()) ||
-                               !jTextField3.getText().equals(jTable1.getValueAt(selectedRow, 2).toString()) ||
-                               !jTextField4.getText().equals(jTable1.getValueAt(selectedRow, 3).toString()) ||
-                               !jTextField5.getText().equals(jTable1.getValueAt(selectedRow, 4).toString()) ||
-                               !jTextField7.getText().equals(jTable1.getValueAt(selectedRow, 5).toString()));
-    
-    jButton1.setEnabled(todosCamposLlenos && (!esFilaSeleccionada || esFilaDiferente));
-    jButton4.setEnabled(algunCampoConTexto);
-}
-        
-        private void agregarListenersCampos() {
+        jButton1.setEnabled(todosCamposLlenos && (!esFilaSeleccionada || esFilaDiferente));
+        jButton4.setEnabled(algunCampoConTexto);
+    }
+
+    private void agregarListenersCampos() {
         DocumentListener listener = new DocumentListener() {
-        @Override
-        public void insertUpdate(DocumentEvent e) {
-            verificarCampos();
-        }
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                verificarCampos();
+            }
 
-        @Override
-        public void removeUpdate(DocumentEvent e) {
-            verificarCampos();
-        }
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                verificarCampos();
+            }
 
-        @Override
-        public void changedUpdate(DocumentEvent e) {
-            verificarCampos();
-        }
-    };
-    
-    jTextField2.getDocument().addDocumentListener(listener);
-    jTextField3.getDocument().addDocumentListener(listener);
-    jTextField4.getDocument().addDocumentListener(listener);
-    jTextField5.getDocument().addDocumentListener(listener);
-    jTextField7.getDocument().addDocumentListener(listener);
-}
-        
-        
-     private void deshabilitarBotones() {
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                verificarCampos();
+            }
+        };
+
+        jTextField2.getDocument().addDocumentListener(listener);
+        jTextField3.getDocument().addDocumentListener(listener);
+        jTextField4.getDocument().addDocumentListener(listener);
+        jTextField5.getDocument().addDocumentListener(listener);
+        jTextField7.getDocument().addDocumentListener(listener);
+    }
+
+    private void deshabilitarBotones() {
         jButton1.setEnabled(false);
         jButton2.setEnabled(false);
         jButton3.setEnabled(false);
         jButton4.setEnabled(false);
-    }       
-             
-             
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -279,6 +265,10 @@ public class ReservaCRUD extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        jMenu2 = new javax.swing.JMenu();
+        jMenu3 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -330,6 +320,27 @@ public class ReservaCRUD extends javax.swing.JFrame {
 
         jButton4.setText("Cancelar");
         jButton4.setEnabled(false);
+
+        jMenu1.setText("Libros");
+        jMenu1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMenu1MouseClicked(evt);
+            }
+        });
+        jMenuBar1.add(jMenu1);
+
+        jMenu2.setText("Clientes");
+        jMenu2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMenu2MouseClicked(evt);
+            }
+        });
+        jMenuBar1.add(jMenu2);
+
+        jMenu3.setText("Reservas");
+        jMenuBar1.add(jMenu3);
+
+        setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -387,7 +398,7 @@ public class ReservaCRUD extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 302, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 93, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 72, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(jButton2)
@@ -402,6 +413,24 @@ public class ReservaCRUD extends javax.swing.JFrame {
     private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField2ActionPerformed
+
+    private void jMenu1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu1MouseClicked
+        // TODO add your handling code here:
+        LibrosCRUD lib = new LibrosCRUD();
+        lib.setVisible(true);
+        setActualViewInvisible();
+    }//GEN-LAST:event_jMenu1MouseClicked
+
+    private void jMenu2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu2MouseClicked
+        // TODO add your handling code here:
+        ClienteCRUD cli = new ClienteCRUD();
+        cli.setVisible(true);
+        setActualViewInvisible();
+    }//GEN-LAST:event_jMenu2MouseClicked
+
+    private void setActualViewInvisible() {
+        this.setVisible(false);
+    }
 
     /**
      * @param args the command line arguments
@@ -448,6 +477,10 @@ public class ReservaCRUD extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenu jMenu3;
+    private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField2;
@@ -456,6 +489,5 @@ public class ReservaCRUD extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField5;
     private javax.swing.JTextField jTextField7;
     // End of variables declaration//GEN-END:variables
-
 
 }
