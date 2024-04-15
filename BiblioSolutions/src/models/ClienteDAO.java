@@ -51,40 +51,6 @@ public class ClienteDAO {
            return datos;
        }
 
-//    public List<ClienteDTO> listar() {
-//        String sql = "SELECT DISTINCT c.*, \n" +
-//                    "    CASE WHEN EXISTS (\n" +
-//                    "        SELECT 1 \n" +
-//                    "        FROM Reservaciones r \n" +
-//                    "        WHERE r.cliente_id = c.Id \n" +
-//                    "        AND r.status = 'Pendiente'\n" +
-//                    "    ) THEN TRUE ELSE FALSE END AS tiene_reserva_pendiente\n" +
-//                    "FROM Clientes c";
-//        List<ClienteDTO> datos = new ArrayList<>();
-//
-//        try {
-//            con = conectar.conectar();
-//            ps = con.prepareStatement(sql);
-//            rs = ps.executeQuery();
-//
-//            while (rs.next()) {
-//                ClienteDTO cliente = new ClienteDTO();
-//                cliente.setId(Integer.parseInt(rs.getString(1)));
-//                cliente.setCedula(rs.getString(2));
-//                cliente.setNombreCompleto(rs.getString(3));
-//                cliente.setCalle(rs.getString(4));
-//                cliente.setTelefono(rs.getString(5));
-//                cliente.setCorreo(rs.getString(6));
-//                System.out.println(rs.getString(7));
-//                cliente.setHasPendingOrders(rs.getBoolean(7));
-//                
-//                datos.add(cliente);
-//            }
-//        } catch (SQLException ex) {
-//            System.out.println("Error al listar los clientes: " + ex);
-//        }
-//        return datos;
-//    }
 
     public int agregar(ClienteDTO cliente) {
         String sql = "INSERT INTO Clientes (Cedula, NombreCompleto, Calle, Telefono, Correo) VALUES (?, ?, ?, ?, ?)";
