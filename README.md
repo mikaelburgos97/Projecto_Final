@@ -27,7 +27,7 @@ Para instalar BiblioSolutions, sigue estos pasos:
 - Franklyn Zarzuela @franklynzm93
 
 # Licencia
-BiblioSolutions está disponible bajo la licencia de MIT.
+BiblioSolutions está disponible bajo la licencia de [MIT](Project_Final/LICENSE).
 
 # Soporte
 Para cualquier sugerencia o error, favor contactarnos via email a:
