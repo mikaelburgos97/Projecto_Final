@@ -16,6 +16,24 @@ public class LoginDTO {
     String password; // Contraseña del usuario.
     LocalDate last_login; // Fecha del último inicio de sesión.
     LocalDate created_at; // Fecha de creación del registro del usuario.
+    boolean isActive; //Comprobar si el usuario esta activo
+
+    public boolean isIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(boolean isActive) {
+        this.isActive = isActive;
+    }
+
+    public String getCedula() {
+        return cedula;
+    }
+
+    public void setCedula(String cedula) {
+        this.cedula = cedula;
+    }
+    String cedula;  // Cedula del usuario, dato personal para conocer su identidad
     
     // Métodos getters y setters para cada atributo, permitiendo obtener y establecer sus valores.
     

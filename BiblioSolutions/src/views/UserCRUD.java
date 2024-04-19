@@ -4,6 +4,10 @@
  */
 package views;
 
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
+import models.*;
+
 /**
  *
  * @author TI
@@ -13,8 +17,45 @@ public class UserCRUD extends javax.swing.JFrame {
     /**
      * Creates new form UserCRUD
      */
+    LoginDAO DAO;
+
     public UserCRUD() {
         initComponents();
+        DAO = new LoginDAO();
+        btn_update.setEnabled(false);
+        btn_delete.setEnabled(false);
+        cargarDatos();
+        txt_id.setEnabled(false);
+    }
+
+    private void cargarDatos() {
+        List<LoginDTO> users = DAO.listUsers();
+        DefaultTableModel model = (DefaultTableModel) tbl_user.getModel();
+        model.setRowCount(0);
+        for (LoginDTO user : users) {
+            Object[] row = {
+                user.getId(),
+                user.getCedula(),
+                user.getUsername(),
+                user.isIsActive() ? "Activo" : "Deshabilitado",};
+            model.addRow(row);
+        }
+    }
+
+    private void actualizar() {
+        LoginDTO usuario = new LoginDTO();
+        usuario.setId(Integer.parseInt(txt_id.getText()));
+        usuario.setUsername(txt_user.getText());
+        usuario.setPassword(txt_password.getText());
+        usuario.setIsActive(chk_isActive.isSelected());
+        
+        DAO.updateUsuario(usuario);
+    }
+    
+    private void eliminar() {
+        String idText= txt_id.getText();
+        DAO.eliminar(idText);
+             
     }
 
     /**
@@ -28,15 +69,17 @@ public class UserCRUD extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         userTitle = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbl_user = new javax.swing.JTable();
-        jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
+        txt_user = new javax.swing.JTextField();
+        txt_password = new javax.swing.JTextField();
         chk_isActive = new javax.swing.JCheckBox();
+        btn_delete = new javax.swing.JButton();
+        btn_update = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
+        txt_id = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -68,19 +111,21 @@ public class UserCRUD extends javax.swing.JFrame {
         tbl_user.setFont(new java.awt.Font("Lucida Fax", 0, 12)); // NOI18N
         tbl_user.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
             },
             new String [] {
-                "Id", "Usuario", "Nom. Completo", "Role", "Estatus"
+                "Id", "Cedula", "Usuario", "Estatus"
             }
         ));
+        tbl_user.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbl_userMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tbl_user);
-
-        jLabel1.setFont(new java.awt.Font("Lucida Fax", 0, 14)); // NOI18N
-        jLabel1.setText("Nombre Completo");
 
         jLabel2.setFont(new java.awt.Font("Lucida Fax", 0, 14)); // NOI18N
         jLabel2.setText("Usuario");
@@ -88,14 +133,36 @@ public class UserCRUD extends javax.swing.JFrame {
         jLabel3.setFont(new java.awt.Font("Lucida Fax", 0, 14)); // NOI18N
         jLabel3.setText("Contraseña");
 
-        jTextField2.addActionListener(new java.awt.event.ActionListener() {
+        txt_user.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField2ActionPerformed(evt);
+                txt_userActionPerformed(evt);
             }
         });
 
         chk_isActive.setFont(new java.awt.Font("Lucida Fax", 0, 14)); // NOI18N
         chk_isActive.setText("Activo");
+
+        btn_delete.setText("Eliminar");
+        btn_delete.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btn_deleteMouseClicked(evt);
+            }
+        });
+
+        btn_update.setText("Actualizar");
+        btn_update.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btn_updateMouseClicked(evt);
+            }
+        });
+
+        jButton1.setText("Cancelar");
+
+        txt_id.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                txt_idMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -103,16 +170,28 @@ public class UserCRUD extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(21, 21, 21)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel3)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(chk_isActive))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btn_update)
+                        .addGap(35, 35, 35)
+                        .addComponent(btn_delete)
+                        .addGap(81, 81, 81))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(26, 26, 26)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txt_user, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel3)
+                                    .addComponent(txt_password, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(chk_isActive)
+                                    .addComponent(txt_id, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(97, 97, 97)
+                                .addComponent(jButton1)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)))
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 654, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -120,32 +199,70 @@ public class UserCRUD extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(25, 25, 25)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
+                        .addGap(25, 25, 25)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 315, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(27, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(29, 29, 29)
+                        .addComponent(txt_id, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txt_user, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txt_password, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(chk_isActive))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 315, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(27, Short.MAX_VALUE))
+                        .addComponent(chk_isActive)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btn_delete, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btn_update, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(43, 43, 43))))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
+    private void txt_userActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_userActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField2ActionPerformed
+    }//GEN-LAST:event_txt_userActionPerformed
+
+    private void tbl_userMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_userMouseClicked
+
+        if (tbl_user.getSelectedRow() != -1) {
+            btn_update.setEnabled(true);
+            btn_delete.setEnabled(true);
+            int fila = this.tbl_user.getSelectedRow();
+            txt_user.setText(String.valueOf(this.tbl_user.getValueAt(fila, 2)));
+            txt_id.setText(String.valueOf(this.tbl_user.getValueAt(fila, 0)));
+            txt_password.setText("*****");
+            chk_isActive.setSelected("Activo".equals(String.valueOf(this.tbl_user.getValueAt(fila, 3))));
+
+        }
+    }//GEN-LAST:event_tbl_userMouseClicked
+
+    private void txt_idMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txt_idMouseClicked
+        // TODO add your handling code here:
+
+    }//GEN-LAST:event_txt_idMouseClicked
+
+    private void btn_updateMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_updateMouseClicked
+        actualizar();
+        cargarDatos();
+    }//GEN-LAST:event_btn_updateMouseClicked
+
+    private void btn_deleteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_deleteMouseClicked
+        // TODO add your handling code here:
+        eliminar();
+        cargarDatos();
+        
+    }//GEN-LAST:event_btn_deleteMouseClicked
 
     /**
      * @param args the command line arguments
@@ -183,16 +300,18 @@ public class UserCRUD extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btn_delete;
+    private javax.swing.JButton btn_update;
     private javax.swing.JCheckBox chk_isActive;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
     private javax.swing.JTable tbl_user;
+    private javax.swing.JTextField txt_id;
+    private javax.swing.JTextField txt_password;
+    private javax.swing.JTextField txt_user;
     private javax.swing.JLabel userTitle;
     // End of variables declaration//GEN-END:variables
 }
