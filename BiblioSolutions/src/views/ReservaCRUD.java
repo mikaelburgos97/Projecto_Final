@@ -265,6 +265,8 @@ public class ReservaCRUD extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
+        pnlTituloReserva = new javax.swing.JPanel();
+        lblTituloReserva = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
@@ -274,6 +276,7 @@ public class ReservaCRUD extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        jLabel2.setFont(new java.awt.Font("Lucida Fax", 0, 14)); // NOI18N
         jLabel2.setText("Fecha de Peticion");
 
         jTextField2.addActionListener(new java.awt.event.ActionListener() {
@@ -282,12 +285,16 @@ public class ReservaCRUD extends javax.swing.JFrame {
             }
         });
 
+        jLabel3.setFont(new java.awt.Font("Lucida Fax", 0, 14)); // NOI18N
         jLabel3.setText("Fecha de Entrega");
 
+        jLabel4.setFont(new java.awt.Font("Lucida Fax", 0, 14)); // NOI18N
         jLabel4.setText("ID del Libro");
 
+        jLabel5.setFont(new java.awt.Font("Lucida Fax", 0, 14)); // NOI18N
         jLabel5.setText("ID del Cliente");
 
+        jLabel7.setFont(new java.awt.Font("Lucida Fax", 0, 14)); // NOI18N
         jLabel7.setText("Estado de Entrega");
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
@@ -322,6 +329,30 @@ public class ReservaCRUD extends javax.swing.JFrame {
 
         jButton4.setText("Cancelar");
         jButton4.setEnabled(false);
+
+        pnlTituloReserva.setBackground(new java.awt.Color(0, 102, 102));
+
+        lblTituloReserva.setFont(new java.awt.Font("Microsoft YaHei", 1, 36)); // NOI18N
+        lblTituloReserva.setForeground(new java.awt.Color(255, 255, 255));
+        lblTituloReserva.setIcon(new javax.swing.ImageIcon(getClass().getResource("/views/images/notebook_32x32.png"))); // NOI18N
+        lblTituloReserva.setText("Reservas");
+
+        javax.swing.GroupLayout pnlTituloReservaLayout = new javax.swing.GroupLayout(pnlTituloReserva);
+        pnlTituloReserva.setLayout(pnlTituloReservaLayout);
+        pnlTituloReservaLayout.setHorizontalGroup(
+            pnlTituloReservaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlTituloReservaLayout.createSequentialGroup()
+                .addGap(36, 36, 36)
+                .addComponent(lblTituloReserva)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        pnlTituloReservaLayout.setVerticalGroup(
+            pnlTituloReservaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlTituloReservaLayout.createSequentialGroup()
+                .addGap(19, 19, 19)
+                .addComponent(lblTituloReserva)
+                .addContainerGap(28, Short.MAX_VALUE))
+        );
 
         jMenu1.setText("Libros");
         jMenu1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -377,7 +408,7 @@ public class ReservaCRUD extends javax.swing.JFrame {
                     .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 102, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 71, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 689, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
@@ -389,11 +420,12 @@ public class ReservaCRUD extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButton4)
                         .addGap(66, 66, 66))))
+            .addComponent(pnlTituloReserva, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -416,13 +448,14 @@ public class ReservaCRUD extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 302, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 72, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(jButton2)
                     .addComponent(jButton3)
                     .addComponent(jButton4))
-                .addGap(28, 28, 28))
+                .addGap(18, 18, 18)
+                .addComponent(pnlTituloReserva, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
@@ -520,6 +553,8 @@ public class ReservaCRUD extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField5;
     private javax.swing.JTextField jTextField7;
+    private javax.swing.JLabel lblTituloReserva;
+    private javax.swing.JPanel pnlTituloReserva;
     // End of variables declaration//GEN-END:variables
 
 }
