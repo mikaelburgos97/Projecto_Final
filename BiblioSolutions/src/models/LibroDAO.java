@@ -1,9 +1,9 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ * Clase LibroDAO para gestionar operaciones de la base de datos para libros.
  */
 package models;
 
+// Importaciones necesarias para el manejo de SQL y listas.
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,33 +12,33 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
- * @author Alan Alexander Perez
+ * Definición de la clase LibroDAO que realiza operaciones CRUD en la tabla de Libros.
+ * Autor: Alan Alexander Pérez
  */
 public class LibroDAO {
 
+    // Instancia de SQLiteConnect para gestionar la conexión a la base de datos.
     SQLiteConnect conectar = new SQLiteConnect();
     Connection con;
     PreparedStatement ps;
     ResultSet rs;
 
     /**
-     * Extrae de la BD todos los libros (incluyendo propiedades calculadas) y
-     * los devuelve como objetos DTO
+     * Obtiene todos los libros de la base de datos y los devuelve como una lista de objetos LibroDTO.
      *
-     * @return Lista de libros
+     * @return Lista de libros.
      */
     public List listar() {
         String sql = "select * from Libros";
         List<LibroDTO> datos = new ArrayList<>();
         try {
-
             con = conectar.conectar();
             ps = con.prepareStatement(sql);
             rs = ps.executeQuery();
 
+            // Iterar sobre los resultados y crear objetos LibroDTO para añadirlos a la lista.
             while (rs.next()) {
-                System.out.println(rs.getString(2));
+                System.out.println(rs.getString(2));  // Imprime el precio diario de cada libro.
                 LibroDTO l = new LibroDTO();
                 l.setId(rs.getInt(1));
                 l.setDaily_price(Double.parseDouble(rs.getString(2)));
@@ -51,11 +51,12 @@ public class LibroDAO {
                 datos.add(l);
             }
         } catch (SQLException ex) {
-            System.out.println("Error al listar los contactos: " + ex);
+            System.out.println("Error al listar los libros: " + ex);
         }
         return datos;
     }
 
+    // Método para agregar un nuevo libro a la base de datos.
     public int agregar(LibroDTO libro) {
         String sql = "INSERT INTO Libros (daily_price, buyed_price, title, autor, total_stock, mora_aument, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
@@ -72,14 +73,14 @@ public class LibroDAO {
             ps.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Error al tratar de insertar datos: " + e);
-            return 0; //  0 si se cayo algo
+            return 0; // Retornar 0 en caso de error.
         }
-        return 1; // 1 si no dio error
+        return 1; // Retornar 1 si la operación fue exitosa.
     }
 
+    // Método para actualizar la información de un libro existente.
     public int actualizar(LibroDTO libro) {
         int r = 0;
-
         String sql = "UPDATE Libros SET daily_price=?, buyed_price=?, title=?, autor=?, total_stock=?, mora_aument=?, created_at=? WHERE ID=?";
 
         try {
@@ -95,33 +96,23 @@ public class LibroDAO {
             ps.setInt(8, libro.getId());
             r = ps.executeUpdate();
 
-            if (r == 1) {
-                return 1; // 1 si no dio error
-            } else {
-                return 0; // 0 si se cayo algo
-            }
-
+            return (r == 1) ? 1 : 0; // Retorna 1 si fue exitoso, 0 si no.
         } catch (SQLException e) {
             System.out.println("Error al tratar de actualizar datos: " + e);
         }
         return r;
     }
 
+    // Método para eliminar un libro por su ID.
     public int eliminar(int id) {
-
         int r = 0;
-
-        String sql = "delete from Libros where id=" + id;
+        String sql = "DELETE FROM Libros WHERE id=" + id;
 
         try {
             con = conectar.conectar();
             ps = con.prepareStatement(sql);
             r = ps.executeUpdate();
-            if (r == 1) {
-                return 1;
-            } else {
-                return 0;
-            }
+            return (r == 1) ? 1 : 0; // Retorna 1 si la eliminación fue exitosa, 0 si no.
         } catch (SQLException e) {
             System.out.println("Error al tratar de borrar datos: " + e);
         }

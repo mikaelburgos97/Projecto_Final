@@ -1,6 +1,5 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ * Clase ReservaDAO para gestionar las operaciones de base de datos de reservaciones.
  */
 package models;
 
@@ -12,18 +11,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
- * @author Alan Alexander Pérez
+ * Clase que define los métodos para realizar operaciones CRUD en la tabla de Reservaciones.
+ * Autor: Alan Alexander Pérez
  */
 public class ReservaDAO {
 
+    // Instancia de SQLiteConnect para gestionar la conexión a la base de datos.
     SQLiteConnect conectar = new SQLiteConnect();
     Connection con;
     PreparedStatement ps;
     ResultSet rs;
     
-    
-
+    /**
+     * Obtiene todas las reservaciones de la base de datos y las devuelve como una lista de objetos ReservaDTO.
+     *
+     * @return lista de reservas
+     */
     public List<ReservaDTO> listar() {
         String sql = "SELECT * FROM Reservaciones";
         List<ReservaDTO> reservas = new ArrayList<>();
@@ -50,6 +53,12 @@ public class ReservaDAO {
         return reservas;
     }
 
+    /**
+     * Agrega una nueva reserva a la base de datos.
+     *
+     * @param reserva la reserva a agregar
+     * @return 1 si la operación es exitosa, 0 si hay un error
+     */
     public int agregar(ReservaDTO reserva) {
         String sql = "INSERT INTO Reservaciones (fecha_peticion, fecha_entrega, libro_id, estado, cliente_id) VALUES (?, ?, ?, ?, ?)";
 
@@ -64,31 +73,43 @@ public class ReservaDAO {
             ps.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Error al tratar de insertar datos: " + e);
-            return 0; // 0 si ocurrió un error
+            return 0; // Indica un error
         }
-        return 1; // 1 si la inserción se realizó correctamente
+        return 1; // Indica éxito
     }
 
-public int actualizar(ReservaDTO reserva) {
-    String sql = "UPDATE Reservaciones SET fecha_peticion=?, fecha_entrega=?, libro_id=?, estado=?, cliente_id=? WHERE id=?";
-    try (Connection con = conectar.conectar();
-         PreparedStatement ps = con.prepareStatement(sql)) {
+    /**
+     * Actualiza una reserva existente en la base de datos.
+     *
+     * @param reserva la reserva a actualizar
+     * @return 1 si la operación es exitosa, 0 si hay un error
+     */
+    public int actualizar(ReservaDTO reserva) {
+        String sql = "UPDATE Reservaciones SET fecha_peticion=?, fecha_entrega=?, libro_id=?, estado=?, cliente_id=? WHERE id=?";
 
-        ps.setString(1, reserva.getFecha_peticion());
-        ps.setString(2, reserva.getFecha_entrega());
-        ps.setInt(3, reserva.getLibro_id());
-        ps.setString(4, reserva.getEstado());
-        ps.setInt(5, reserva.getCliente_id());
-        ps.setInt(6, reserva.getId());
+        try (Connection con = conectar.conectar();
+             PreparedStatement ps = con.prepareStatement(sql)) {
 
-        return ps.executeUpdate();
-    } catch (SQLException e) {
-        System.out.println("Error al tratar de actualizar datos: " + e);
-        return 0; // Retorna 0 para indicar fallo
+            ps.setString(1, reserva.getFecha_peticion());
+            ps.setString(2, reserva.getFecha_entrega());
+            ps.setInt(3, reserva.getLibro_id());
+            ps.setString(4, reserva.getEstado());
+            ps.setInt(5, reserva.getCliente_id());
+            ps.setInt(6, reserva.getId());
+
+            return ps.executeUpdate(); // Retorna el número de filas afectadas
+        } catch (SQLException e) {
+            System.out.println("Error al tratar de actualizar datos: " + e);
+            return 0; // Indica un error
+        }
     }
-}
 
-
+    /**
+     * Elimina una reserva por su ID.
+     *
+     * @param id el ID de la reserva a eliminar
+     * @return 1 si la operación es exitosa, 0 si hay un error
+     */
     public int eliminar(int id) {
         int r = 0;
         String sql = "DELETE FROM Reservaciones WHERE id=" + id;
@@ -97,14 +118,10 @@ public int actualizar(ReservaDTO reserva) {
             con = conectar.conectar();
             ps = con.prepareStatement(sql);
             r = ps.executeUpdate();
-            if (r == 1) {
-                return 1;
-            } else {
-                return 0;
-            }
+            return (r == 1) ? 1 : 0; // Retorna 1 si es exitoso, 0 si no
         } catch (SQLException e) {
             System.out.println("Error al tratar de borrar datos: " + e);
+            return 0; // Indica un error
         }
-        return r;
     }
 }
