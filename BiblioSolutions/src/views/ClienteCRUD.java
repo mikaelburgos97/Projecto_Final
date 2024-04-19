@@ -263,9 +263,9 @@ public class ClienteCRUD extends javax.swing.JFrame {
         jMenu3 = new javax.swing.JMenu();
         jMenu4 = new javax.swing.JMenu();
         jMenu5 = new javax.swing.JMenu();
+        jMenu7 = new javax.swing.JMenu();
         jMenu6 = new javax.swing.JMenu();
         jMenu8 = new javax.swing.JMenu();
-        jMenu7 = new javax.swing.JMenu();
 
         jMenu1.setText("File");
         jMenuBar1.add(jMenu1);
@@ -362,6 +362,14 @@ public class ClienteCRUD extends javax.swing.JFrame {
         });
         jMenuBar2.add(jMenu5);
 
+        jMenu7.setText("Usuarios");
+        jMenu7.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMenu7MouseClicked(evt);
+            }
+        });
+        jMenuBar2.add(jMenu7);
+
         jMenu6.setText("Salir");
         jMenu6.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -377,7 +385,6 @@ public class ClienteCRUD extends javax.swing.JFrame {
             }
         });
         jMenuBar2.add(jMenu8);
-        jMenuBar2.add(jMenu7);
 
         setJMenuBar(jMenuBar2);
 
@@ -480,6 +487,11 @@ public class ClienteCRUD extends javax.swing.JFrame {
         AcercaDe acer = new AcercaDe();
         acer.setVisible(true);
     }//GEN-LAST:event_jMenu8MouseClicked
+
+    private void jMenu7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu7MouseClicked
+       this.setVisible(false);
+       new UserCRUD().setVisible(true);
+    }//GEN-LAST:event_jMenu7MouseClicked
 
     private void setActualViewInvisible() {
         this.setVisible(false);

@@ -210,6 +210,7 @@ public class LibrosCRUD extends javax.swing.JFrame {
         jMenu1 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
         jMenu3 = new javax.swing.JMenu();
+        user_option = new javax.swing.JMenu();
         jMenu5 = new javax.swing.JMenu();
         jMenu4 = new javax.swing.JMenu();
 
@@ -304,6 +305,14 @@ public class LibrosCRUD extends javax.swing.JFrame {
             }
         });
         jMenuBar1.add(jMenu3);
+
+        user_option.setText("Usuario");
+        user_option.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                user_optionMouseClicked(evt);
+            }
+        });
+        jMenuBar1.add(user_option);
 
         jMenu5.setText("Acerca De");
         jMenu5.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -444,13 +453,18 @@ public class LibrosCRUD extends javax.swing.JFrame {
 
     private void jMenu4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu4MouseClicked
         // TODO add your handling code here:
-       System.exit(WIDTH);
+        System.exit(WIDTH);
     }//GEN-LAST:event_jMenu4MouseClicked
 
     private void jMenu5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu5MouseClicked
         AcercaDe ins = new AcercaDe();
         ins.setVisible(true);
     }//GEN-LAST:event_jMenu5MouseClicked
+
+    private void user_optionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_user_optionMouseClicked
+        this.setVisible(false);
+        new UserCRUD().setVisible(true);
+    }//GEN-LAST:event_user_optionMouseClicked
 
     private void setActualViewInvisible() {
         this.setVisible(false);
@@ -519,5 +533,6 @@ public class LibrosCRUD extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField6;
     private javax.swing.JLabel lblTituloLibros;
     private javax.swing.JPanel pnlTituloLibros;
+    private javax.swing.JMenu user_option;
     // End of variables declaration//GEN-END:variables
 }

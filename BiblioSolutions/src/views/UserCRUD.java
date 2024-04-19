@@ -48,14 +48,14 @@ public class UserCRUD extends javax.swing.JFrame {
         usuario.setUsername(txt_user.getText());
         usuario.setPassword(txt_password.getText());
         usuario.setIsActive(chk_isActive.isSelected());
-        
+
         DAO.updateUsuario(usuario);
     }
-    
+
     private void eliminar() {
-        String idText= txt_id.getText();
+        String idText = txt_id.getText();
         DAO.eliminar(idText);
-             
+
     }
 
     /**
@@ -157,6 +157,11 @@ public class UserCRUD extends javax.swing.JFrame {
         });
 
         jButton1.setText("Cancelar");
+        jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton1MouseClicked(evt);
+            }
+        });
 
         txt_id.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -252,17 +257,37 @@ public class UserCRUD extends javax.swing.JFrame {
 
     }//GEN-LAST:event_txt_idMouseClicked
 
+    private void limpiarInputs() {
+        txt_user.setText("");
+        txt_id.setText("");
+        txt_password.setText("");
+    }
+
+    private void reverseAll() {
+        limpiarInputs();
+        tbl_user.clearSelection();
+        btn_update.setEnabled(false);
+        btn_delete.setEnabled(false);
+    }
+
     private void btn_updateMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_updateMouseClicked
         actualizar();
         cargarDatos();
+        reverseAll();
     }//GEN-LAST:event_btn_updateMouseClicked
 
     private void btn_deleteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_deleteMouseClicked
         // TODO add your handling code here:
         eliminar();
         cargarDatos();
-        
+        reverseAll();
+
     }//GEN-LAST:event_btn_deleteMouseClicked
+
+    private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
+        // TODO add your handling code here:
+        reverseAll();
+    }//GEN-LAST:event_jButton1MouseClicked
 
     /**
      * @param args the command line arguments
