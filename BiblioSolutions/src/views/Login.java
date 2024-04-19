@@ -64,11 +64,15 @@ public class Login extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jPasswordField1 = new javax.swing.JPasswordField();
         btn_registerRoute = new javax.swing.JButton();
+        pnlTituloLogin = new javax.swing.JPanel();
+        lblTituloLogin = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        jLabel1.setFont(new java.awt.Font("Lucida Fax", 0, 14)); // NOI18N
         jLabel1.setText("Usuario");
 
+        jLabel2.setFont(new java.awt.Font("Lucida Fax", 0, 14)); // NOI18N
         jLabel2.setText("Contrasena");
 
         jButton1.setText("Login");
@@ -82,35 +86,60 @@ public class Login extends javax.swing.JFrame {
             }
         });
 
+        pnlTituloLogin.setBackground(new java.awt.Color(0, 102, 102));
+
+        lblTituloLogin.setFont(new java.awt.Font("Microsoft New Tai Lue", 1, 36)); // NOI18N
+        lblTituloLogin.setForeground(new java.awt.Color(255, 255, 255));
+        lblTituloLogin.setIcon(new javax.swing.ImageIcon(getClass().getResource("/views/images/Key_32x32.png"))); // NOI18N
+        lblTituloLogin.setText("Acceso");
+
+        javax.swing.GroupLayout pnlTituloLoginLayout = new javax.swing.GroupLayout(pnlTituloLogin);
+        pnlTituloLogin.setLayout(pnlTituloLoginLayout);
+        pnlTituloLoginLayout.setHorizontalGroup(
+            pnlTituloLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlTituloLoginLayout.createSequentialGroup()
+                .addGap(112, 112, 112)
+                .addComponent(lblTituloLogin)
+                .addContainerGap(139, Short.MAX_VALUE))
+        );
+        pnlTituloLoginLayout.setVerticalGroup(
+            pnlTituloLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlTituloLoginLayout.createSequentialGroup()
+                .addGap(16, 16, 16)
+                .addComponent(lblTituloLogin)
+                .addContainerGap(20, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(pnlTituloLogin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(170, 170, 170)
-                                .addComponent(jLabel1))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(161, 161, 161)
-                                .addComponent(jLabel2))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(138, 138, 138)
-                                .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(154, 154, 154)
+                        .addGap(145, 145, 145)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btn_registerRoute)
-                            .addComponent(jButton1))))
-                .addContainerGap(159, Short.MAX_VALUE))
+                            .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(16, 16, 16)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(btn_registerRoute)
+                                    .addComponent(jButton1)))
+                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(160, 160, 160)
+                        .addComponent(jLabel2))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(172, 172, 172)
+                        .addComponent(jLabel1)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(57, 57, 57)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addComponent(pnlTituloLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -122,7 +151,7 @@ public class Login extends javax.swing.JFrame {
                 .addComponent(jButton1)
                 .addGap(26, 26, 26)
                 .addComponent(btn_registerRoute)
-                .addContainerGap(72, Short.MAX_VALUE))
+                .addContainerGap(31, Short.MAX_VALUE))
         );
 
         pack();
@@ -181,6 +210,8 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPasswordField jPasswordField1;
     private javax.swing.JTextField jTextField1;
+    private javax.swing.JLabel lblTituloLogin;
     private java.awt.List list1;
+    private javax.swing.JPanel pnlTituloLogin;
     // End of variables declaration//GEN-END:variables
 }
