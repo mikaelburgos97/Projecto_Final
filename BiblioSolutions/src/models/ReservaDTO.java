@@ -1,21 +1,23 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ * Clase ReservaDTO utilizada para representar y manipular los datos de reservaciones.
  */
 package models;
 
 /**
- *
- * @author Alan Alexander Perez
+ * Clase que define los atributos y métodos para manipular los datos de las reservas.
+ * Autor: Alan Alexander Pérez
  */
 public class ReservaDTO {
-    int id;
-    String fecha_peticion;
-    String fecha_entrega;
-    int libro_id;
-    String estado;
-    int cliente_id;
+    // Atributos de la clase con su tipo y propósito.
+    int id; // Identificador único para la reserva.
+    String fecha_peticion; // Fecha en la que se realizó la petición de la reserva.
+    String fecha_entrega; // Fecha prevista para la entrega del libro reservado.
+    int libro_id; // Identificador del libro reservado.
+    String estado; // Estado actual de la reserva.
+    int cliente_id; // Identificador del cliente que realizó la reserva.
 
+    // Métodos getters y setters para cada atributo, permitiendo obtener y establecer sus valores.
+    
     public int getId() {
         return id;
     }

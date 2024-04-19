@@ -1,20 +1,23 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ * Clase LoginDTO utilizada para representar y manipular los datos de login de los usuarios.
  */
 package models;
 import java.time.LocalDate;
-import models.utils.DateHandler;
+import models.utils.DateHandler; // Utilizado para manejar las conversiones de fechas.
+
 /**
- *
- * @author Alan Alexander Perez
+ * Clase que define los atributos y métodos para manipular los datos de login de los usuarios.
+ * Autor: Alan Alexander Pérez
  */
 public class LoginDTO {
-    int id;
-    String username;
-    String password;
-    LocalDate last_login;
-    LocalDate created_at;
+    // Atributos de la clase con su tipo y propósito.
+    int id; // Identificador único para el usuario.
+    String username; // Nombre de usuario.
+    String password; // Contraseña del usuario.
+    LocalDate last_login; // Fecha del último inicio de sesión.
+    LocalDate created_at; // Fecha de creación del registro del usuario.
+    
+    // Métodos getters y setters para cada atributo, permitiendo obtener y establecer sus valores.
     
     public int getId() {
         return id;
@@ -44,21 +47,17 @@ public class LoginDTO {
         return last_login;
     }
 
+    // Método para establecer la fecha del último login, convirtiendo un String a LocalDate.
     public void setLast_login(String last_login) {
-        LocalDate dateObj = DateHandler.parseStringToDate(last_login);
-        this.last_login = dateObj;
+        this.last_login = DateHandler.parseStringToDate(last_login);
     }
 
     public LocalDate getCreated_at() {
         return created_at;
     }
 
+    // Método para establecer la fecha de creación del registro, convirtiendo un String a LocalDate.
     public void setCreated_at(String created_at) {
-        LocalDate dateObj = DateHandler.parseStringToDate(created_at);
-        this.created_at = dateObj;
+        this.created_at = DateHandler.parseStringToDate(created_at);
     }
-    
-    
-
-
 }

@@ -1,6 +1,5 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ * Clase LoginDAO para gestionar la autenticación de usuarios.
  */
 package models;
 
@@ -12,48 +11,46 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
- * @author Alan Alexander Pérez
+ * Clase que define los métodos para realizar operaciones de inicio de sesión.
+ * Autor: Alan Alexander Pérez
  */
-
-
 public class LoginDAO {
     
+    // Instancia de SQLiteConnect para gestionar la conexión a la base de datos.
     SQLiteConnect conectar = new SQLiteConnect();
     Connection con;
     PreparedStatement ps;
     ResultSet rs;
 
     /**
-     * Este metodo se encarga de listar un registro.El mismo devuelve un objeto
-     * tipo arrayList.
+     * Realiza el proceso de verificación de las credenciales de un usuario.
      *
-     * @param username
-     * @param password
-     * @return datos
+     * @param username El nombre de usuario.
+     * @param password La contraseña del usuario.
+     * @return true si las credenciales son válidas, false en caso contrario.
      */
     public boolean realizarLogin(String username, String password) {
-        con = conectar.conectar();
+        con = conectar.conectar();  // Establece conexión con la base de datos.
 
-        String sql = "select * from Users where username = ? and password = ?";
+        String sql = "select * from Users where username = ? and password = ?";  // Consulta SQL para buscar al usuario.
 
         try {
-            ps = con.prepareStatement(sql);
+            ps = con.prepareStatement(sql);  // Prepara la consulta SQL.
 
-            ps.setString(1, username);
-            ps.setString(2, password);
+            ps.setString(1, username);  // Establece el nombre de usuario en el primer parámetro de la consulta.
+            ps.setString(2, password);  // Establece la contraseña en el segundo parámetro de la consulta.
 
-            rs = ps.executeQuery();
+            rs = ps.executeQuery();  // Ejecuta la consulta y obtiene los resultados.
 
-            while (rs.next()) {
-                con.close();
-                return true;
+            while (rs.next()) {  // Verifica si existe al menos un resultado.
+                con.close();  // Cierra la conexión con la base de datos.
+                return true;  // Retorna true, indicando que las credenciales son válidas.
             }
 
-        } catch (SQLException ex) {
-            Logger.getLogger(LoginDAO.class.getName()).log(Level.SEVERE, null, ex);
-            return false;
+        } catch (SQLException ex) {  // Manejo de excepciones SQL.
+            Logger.getLogger(LoginDAO.class.getName()).log(Level.SEVERE, null, ex);  // Loguea el error.
+            return false;  // Retorna false, indicando que ocurrió un error.
         }
-        return false;
+        return false;  // Retorna false si no se encontraron coincidencias en la base de datos.
     }
 }
