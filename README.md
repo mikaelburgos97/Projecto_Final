@@ -27,7 +27,10 @@ Para instalar BiblioSolutions, sigue estos pasos:
 - Franklyn Zarzuela @franklynzm93
 
 # Licencia
-BiblioSolutions está disponible bajo la licencia de PrimeCoders.
+BiblioSolutions está disponible bajo la licencia de MIT.
 
 # Soporte
-Para cualquier sugerencia o error, favor contactarnos via email a: alan80perez@gmail.com
+Para cualquier sugerencia o error, favor contactarnos via email a:
+- alan80perez@gmail.com
+- mikaelburgos97@gmail.com
+- franklynzm93@gmail.com
